@@ -5,7 +5,7 @@ var config = {
 	//这里填写你自己的工厂个性域名，工厂后台首页可以看到
   //'subDomain': 'fireshop',
 
-  //      https://api.it120.cc/fecshop
+  //      https://api.it120.cc/fireshop
   'url': 'http://fecshop.appserver.fancyecommerce.com',
   'subDomain': '',
 

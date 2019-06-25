@@ -1,7 +1,4 @@
-statistics<navigation id='Navigation' show-search='{{true}}'></navigation>
-11
-{{language.personalInfo}}
-22
+<navigation id='Navigation' show-search='{{true}}'></navigation>
 <view class="container">
   <view class="type-container-boxx">
     <view class="type-container">
@@ -16,7 +13,7 @@ statistics<navigation id='Navigation' show-search='{{true}}'></navigation>
         <swiper class="swiper_box" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" bindchange="swiperchange">
           <block wx:for="{{banners}}" wx:key="id">
             <swiper-item>
-              <image bindtap="toDetailsTap" data-id="{{item.businessId}}" src="{{item.picUrl}}_m" class="slide-image" mode="widthFix" />
+              <image bindtap="toDetailsTap" data-id="{{item.productId}}" src="{{item.picUrl}}" class="slide-image" mode="widthFix" />
             </swiper-item>
           </block>
         </swiper>
@@ -26,7 +23,7 @@ statistics<navigation id='Navigation' show-search='{{true}}'></navigation>
           </block>
         </view>
       </view>
-      <view if="{{item.level == 2}}" class="type-menu">
+      <view  class="type-menu">
         <view class="type-level-box" wx:for-items="{{categorieslist}}" wx:key="id">
           <view id="{{item.id}}" class="type-level-item " bindtap="levelClick" data-id="{{item.id}}">
             <image class="type-img" src="{{item.icon}}"></image>

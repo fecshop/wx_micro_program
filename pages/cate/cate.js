@@ -19,7 +19,12 @@ Page({
     //语言 - begin
     language: '',
     //语言 - end
-    searchidden: true
+    searchidden: true,
+    banner:{},
+    categoriesListAll:[],
+    categorieslist:[],
+    categories:[]
+
   },
   // 语言 
   // 设置language变量（翻译Object）
@@ -27,6 +32,7 @@ Page({
     this.setData({
       language: wx.T.getLanguage()
     });
+    this.initCategory();
   },
   tabClick: function (e) {
     this.setData({
@@ -105,7 +111,10 @@ Page({
         }
       }
     })
-    wx.request({
+    
+    
+    /**
+     * wx.request({
       url: app.globalData.urls + '/banner/list',
       data: {
         key: 'mallName',
@@ -119,56 +128,56 @@ Page({
         }
       }
     }),
+     */
+  },
+  initCategory: function () {
+    var that = this
     wx.request({
-      url: app.globalData.urls + '/shop/goods/category/all',
+      url: app.globalData.urls + '/general/base/wxmenu',  // '/shop/goods/category/all',
+      header: app.getRequestHeader(),
       success: function (res) {
-        var categories = [{ id: 0, name: "所有分类" }];
-        if (res.data.code == 0) {
+        if (res.data.code == 200) {
+          var categories = res.data.data.categories;
+          var categorieslist = res.data.data.categorieslist;
+          var banners = res.data.data.banners
           wx.hideLoading();
-          for (var i = 0; i < res.data.data.length; i++) {
-            if (res.data.data[i].level == 1) {
-              categories.push(res.data.data[i]);
-            }
-          }
+          that.setData({
+            categories: categories,
+            categoriesListAll: categorieslist,
+            categorieslist: categorieslist,
+            banners: banners,
+            activeCategoryId: 0
+          });
         }//
-        that.setData({
-          categories: categories,
-          activeCategoryId: 0
-        });
-        that.getGoodsList(0);
+        app.saveReponseHeader(res);
+        //that.getGoodsList(0);
       }
     })
   },
   getGoodsList: function (categoryId) {
-    if (categoryId == 0) {
-      categoryId = "";
-    }
     var that = this;
-    wx.request({
-      url: app.globalData.urls + '/shop/goods/category/all',
-      success: function (res) {
-        var categorieslist = [];
-        if (res.data.code == 0) {
-          for (var i = 0; i < res.data.data.length; i++) {
-            if (categoryId != '') {
-              if (res.data.data[i].pid == categoryId) {
-                categorieslist.push(res.data.data[i]);
-              }
-            } else {
-              //categorieslist.push(res.data.data[i]);
-              if (res.data.data[i].pid != 0) {
-                categorieslist.push(res.data.data[i]);
-              }
-            }
-          }
-        }//
-        that.setData({
-          categorieslist: categorieslist,
-        });
+    var categorieslist = [];
+    var categoriesListAll = that.data.categoriesListAll
+    if (categoryId == 0) {
+      that.setData({
+        categorieslist: categoriesListAll,
+      });
+      return
+    }
+    for (var x in categoriesListAll) {
+      var category = categoriesListAll[x]
+      var pid = category.pid
+      if (pid == categoryId) {
+        categorieslist.push(category);
       }
-    })
+    }
+    that.setData({
+      categorieslist: categorieslist,
+    });
+
   },
   toDetailsTap: function (e){
+    //console.log("/pages/goods-detail/goods-detail?id=" + e.currentTarget.dataset.id)
     wx.navigateTo({
       url: "/pages/goods-detail/goods-detail?id=" + e.currentTarget.dataset.id
     })

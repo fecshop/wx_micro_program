@@ -55,11 +55,12 @@ Page({
     wx.T.setLocaleByIndex(index);
     // 设置language变量（翻译Object）
     this.setLanguage();
-    // 添加事件
-    event.emit('languageChanged');
+    
     // 写入Storage
     var fecshop_lang = wx.T.getCodeByIndex(index);
     wx.setStorageSync('fecshop-lang', fecshop_lang);
+    // 添加事件
+    event.emit('languageChanged');
     this.loadHomeData();
   },
   // 语言 
@@ -140,8 +141,6 @@ Page({
     event.emit('currencyChanged');
     // 写入Storage
     var currencyCodes = this.data.currencyCodes;
-    console.log(currencyCodes)
-    console.log(index)
     var fecshop_currency = currencyCodes[index];
     wx.setStorageSync('fecshop-currency', fecshop_currency);
     this.loadHomeData();
