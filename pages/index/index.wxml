@@ -63,6 +63,15 @@
           </view>
         </picker>
   </view>
+
+  <view class="languages-container" >
+    <view style="display:inline-block"></view>
+    <picker style="display:inline-block" bindchange="changeCurrency" mode="selector" range="{{currencys}}" value="{{currencyIndex}}" >
+          <view class="picker">
+            {{language.change_currency}}：{{currencys[currencyIndex]}} <!-- (1) -->
+          </view>
+        </picker>
+  </view>
 </view>
 <view class="show-container" hidden="{{wxlogin}}">
   <view class="show-box">

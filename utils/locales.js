@@ -3,6 +3,7 @@
 export default {
   'zh': {
     "change_language": "切换语言",
+    "change_currency": "切换货币",
 
 
 
@@ -22,7 +23,7 @@ export default {
   },
   'en': {
     "change_language": "Change Language",
-
+    "change_currency": "Change Currency",
 
 
     "language": "Language",

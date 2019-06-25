@@ -21,8 +21,14 @@ Page({
     //语言 - begin
     language: '',
     languages: [],
-    langIndex: 0
+    langIndex: 0,
     //语言 - end
+    // 货币
+    currencys: [],
+    currencyCodes: [],
+    currencyIndex: 0,
+
+
 	},
 	onShow(){
 		var that = this
@@ -86,7 +92,8 @@ Page({
           that.setData({
             banners: res.data.data.banners
           });
-
+          // 货币
+          that.initCurrency(res.data.data.currency)
 
           console.log(res.data.data.products)
           app.saveReponseHeader(res);
@@ -94,6 +101,52 @@ Page({
       }
     })
   },
+  // 货币
+  getCurrencyIndex: function (currencyCodeList, currentCurrency) {
+    for (var x in currencyCodeList) {
+      if (currencyCodeList[x] == currentCurrency) {
+        return x
+      }
+    }
+  },
+  // 货币
+  initCurrency: function (currencyObj) {
+    var that = this
+    var currencyCodeList = currencyObj.currencyCodeList  // ["EUR", "USD", "GBP", "CNY"]
+    var currencyList = currencyObj.currencyList  // ["€ EUR", "$ USD", "£ GBP", "￥ CNY"]
+    var currentCurrency = currencyObj.currentCurrency  // "CNY"
+
+    var currencyIndex = that.getCurrencyIndex(currencyCodeList, currentCurrency)
+
+    that.setData({
+      currencys: currencyList
+    });
+    that.setData({
+      currencyCodes: currencyCodeList
+    });
+    that.setData({
+      currencyIndex: currencyIndex
+    });
+
+  },
+  // 货币  - 更改货币
+  changeCurrency(e) {
+    let index = e.detail.value;
+    // 设置当前的Picker的LangIndex
+    this.setData({	// (1)
+      currencyIndex: index
+    });
+    // 添加事件
+    event.emit('currencyChanged');
+    // 写入Storage
+    var currencyCodes = this.data.currencyCodes;
+    console.log(currencyCodes)
+    console.log(index)
+    var fecshop_currency = currencyCodes[index];
+    wx.setStorageSync('fecshop-currency', fecshop_currency);
+    this.loadHomeData();
+  },
+  
 	onLoad: function() {
 		var that = this;
     // 语言
@@ -117,7 +170,7 @@ Page({
 				iphone: true
 			})
 		}
-
+    // ajax请求
     that.loadHomeData();
 
     /*
