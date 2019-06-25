@@ -1,4 +1,7 @@
 statistics<navigation id='Navigation' show-search='{{true}}'></navigation>
+11
+{{language.personalInfo}}
+22
 <view class="container">
   <view class="type-container-boxx">
     <view class="type-container">

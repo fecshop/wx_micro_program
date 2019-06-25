@@ -46,17 +46,23 @@ Page({
   onLoad: function () {
     var that = this;
     countdown(that);
+    //var request_header = app.getRequestHeader();
+    //console.log(request_header);
     wx.request({
-      url: app.globalData.urls + '/banner/list',
+      url: app.globalData.urls + '/wx/start/first', //  '/banner/list',
+      header: app.getRequestHeader(),
       data: {
         key: 'mallName',
         type: 'start'
       },
       success: function (res) {
-        if (res.data.code == 0) {
+        if (res.data.code == 200) {
+          console.log(res.data.data.picUrl)
           that.setData({
             sales: res.data.data
           });
+          app.saveReponseHeader(res); 
+          //header
         }
       }
     })

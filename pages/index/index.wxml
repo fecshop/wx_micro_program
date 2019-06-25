@@ -1,6 +1,12 @@
 <!--index.wxml-->
 <navigation id='Navigation' show-search='{{showSearch}}' class="fix-top" animation="{{fadeAni}}"></navigation>
+
+
+
 <view class="container">
+
+  
+
 	<view class="swiper-container">
 		<swiper class="swiper_box" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" bindchange="swiperchange"
 		 circular="circular">
@@ -38,10 +44,25 @@
 	  <navigator url="/pages/goods-detail/goods-detail?id={{item.id}}" class="goods-list" wx:for-items="{{goods}}" wx:key="{{index}}">
 	    <image src="{{item.pic}}" />
 	    <view class="goods-list-title">{{item.name}}</view>
-	    <view class="goods-list-text">{{item.characteristic}}</view>
-	    <view class="goods-list-money">Ұ{{item.minPrice}}</view>
+      
+      <block wx:if="{{item.special_price}}" >
+	    <view class="goods-price">{{item.special_price.symbol}} {{item.special_price.value}}</view>
+      <view class="goods-originalPrice">{{item.price.symbol}} {{item.price.value}}</view>
+      </block>
+      <block wx:if="{{!item.special_price}}" >
+      <view class="goods-list-money">{{item.price.symbol}} {{item.price.value}}</view>
+      </block>
+
 	  </navigator>
 	</view>
+  <view class="languages-container" >
+    <view style="display:inline-block"></view>
+    <picker style="display:inline-block" bindchange="changeLanguage" mode="selector" range="{{languages}}" value="{{langIndex}}" >
+          <view class="picker">
+            {{language.change_language}}：{{languages[langIndex]}} <!-- (1) -->
+          </view>
+        </picker>
+  </view>
 </view>
 <view class="show-container" hidden="{{wxlogin}}">
   <view class="show-box">

@@ -1,5 +1,10 @@
 //app.js
+
+import locales from './utils/locales'
+import T from './utils/i18n'
+
 App({
+  // 初始化url和设备
 	onLaunch: function() {
 		var that = this;
 		that.urls();
@@ -14,6 +19,23 @@ App({
 			}
 		});
 		that.login()
+    
+    // 初始化货币
+    var fecshop_currency = wx.getStorageSync('fecshop-currency');
+    if (!fecshop_currency) {
+      var currency_code = that.siteInfo.currency_code;
+      wx.setStorageSync('fecshop-currency', currency_code);
+    }
+    // 初始化语言
+    T.registerLocale(locales);	// (1)
+    var fecshop_lang = wx.getStorageSync('fecshop-lang');
+    if (!fecshop_lang) {
+      fecshop_lang = that.siteInfo.lang_code;
+      wx.setStorageSync('fecshop-lang', fecshop_lang);
+    }
+    T.setLocaleByCode(fecshop_lang);	// (2)
+    wx.T = T;	// (3)
+    // 初始化语言 - 完成
 	},
 	urls: function() {
 		var that = this;
@@ -21,6 +43,7 @@ App({
 		that.globalData.share = that.siteInfo.shareProfile;
 	},
 	siteInfo: require("config.js"),
+  
 	login: function () {
 	  var that = this;
 	  var token = that.globalData.token;
@@ -42,7 +65,7 @@ App({
 	  wx.login({
 	    success: function (res) {
 	      wx.request({
-	        url: that.globalData.urls + "/user/wxapp/login",
+          url: that.globalData.urls + "/wx/account/login",  // "/user/wxapp/login",
 	        data: {
 	          code: res.code
 	        },
@@ -51,7 +74,7 @@ App({
 	            that.globalData.usinfo = 0;
 	            return;
 	          }
-	          if (res.data.code != 0) {
+	          if (res.data.code != 200) {
 	            wx.hideLoading();
 	            wx.showModal({
 	              title: "提示",
@@ -67,6 +90,7 @@ App({
 	    }
 	  });
 	},
+  
 	sendTempleMsg: function (orderId, trigger, template_id, form_id, page, postJsonString) {
 	  var that = this;
 	  wx.request({
@@ -119,6 +143,7 @@ App({
     json[param] = animation.export()
     that.setData(json)
 	},
+  //
 	isStrInArray:function(item, arr) {
 		for (var i = 0; i < arr.length; i++) {
 			if (arr[i] == item) {
@@ -127,6 +152,52 @@ App({
 		}
 		return false;
 	},
+  getRequestHeader: function(){
+    var headers = {};
+    // 从数据fecshop-data中取出来值
+    console.log(headers);
+    var fecshop_uuid = wx.getStorageSync('fecshop-uuid');
+    var fecshop_lang = wx.getStorageSync('fecshop-lang');
+    var fecshop_currency = wx.getStorageSync('fecshop-currency');
+    var fecshop_access_token = wx.getStorageSync('access-token');
+    if (fecshop_uuid) {
+      headers['fecshop-uuid'] = fecshop_uuid;
+    }
+    if (fecshop_lang) {
+      headers['fecshop-lang'] = fecshop_lang;
+    }
+    if (fecshop_currency) {
+      headers['fecshop-currency'] = fecshop_currency;
+    }
+    if (fecshop_access_token) {
+      headers['access-token'] = fecshop_access_token;
+    }
+    headers['fecshop-test'] = 'test';
+    console.log(headers);
+
+    return headers;
+  },
+  saveReponseHeader: function (request){
+
+    var fecshop_uuid = wx.getStorageSync('fecshop-uuid');
+    var fecshop_access_token = wx.getStorageSync('access-token');
+
+    var fecshop_data = {};
+    var request_header = request.header;
+    var header_fecshop_uuid = request_header['Fecshop-Uuid'];
+    var header_access_token = request_header['Access-Token'];
+    
+    //console.log("eeeeeeeeeeeee");
+    //console.log(header_fecshop_uuid);
+    if (header_fecshop_uuid && (header_fecshop_uuid != fecshop_uuid)) {
+      wx.setStorageSync('fecshop-uuid', header_fecshop_uuid);
+    }
+    if (header_access_token && (header_access_token != fecshop_access_token)) {
+      wx.setStorageSync('access-token', header_access_token);
+    }
+    
+  },
+  // 设置页面底部的购物车产品个数
 	getShopCartNum:function(){
 		var that = this
 		wx.getStorage({

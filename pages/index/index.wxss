@@ -119,7 +119,16 @@ page{
   margin-bottom: 20rpx;
   background: #fff;
 }
+.languages-container {
+  width: 100%;
+  float: left;
+  margin-bottom: 20rpx;
+  background: #fff;
+  padding:10rpx;
+  font-size:30rpx;
+  text-align:center;
 
+}
 .goods-container .goods-title {
   text-align: center;
   height: 90rpx;
@@ -308,3 +317,23 @@ page{
   margin: auto;
   margin-top: 10px;
 }
+
+.goods-originalPrice {
+  padding-left:20rpx;
+  font-size:30rpx;
+  color:#999;
+  text-decoration:line-through;
+  line-height:52rpx;
+  display:inline-block;
+
+}
+
+.goods-price {
+padding-left:30rpx;
+color:#b5272d;
+font-size:30rpx;
+padding-top:10rpx;
+display:inline-block;
+
+}
+

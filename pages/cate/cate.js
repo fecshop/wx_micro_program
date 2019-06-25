@@ -1,5 +1,9 @@
 //index.js
 var app = getApp()
+// 语言
+var util = require('../../utils/util.js')
+import event from '../../utils/event'
+
 Page({
   data: {
     indicatorDots: true,
@@ -12,9 +16,18 @@ Page({
     loadingMoreHidden: true,
     search: true,
     nonehidden: true,
+    //语言 - begin
+    language: '',
+    //语言 - end
     searchidden: true
   },
-
+  // 语言 
+  // 设置language变量（翻译Object）
+  setLanguage() {
+    this.setData({
+      language: wx.T.getLanguage()
+    });
+  },
   tabClick: function (e) {
     this.setData({
       activeCategoryId: e.currentTarget.id
@@ -75,6 +88,13 @@ Page({
   onLoad: function () {
     wx.showLoading();
     var that = this;
+    // 语言
+    // 设置当前页面的language变量 - 每个页面都要有
+    this.setLanguage();
+    event.on("languageChanged", this, this.setLanguage); // (2)
+    // 设置当前页面的language Index - 每个页面都要有
+    wx.T.setLocaleByIndex(wx.T.langIndex);
+    // 语言 - 结束
     wx.getSystemInfo({
       success: function (res) {
         if (res.model.search('iPhone X') != -1) {
@@ -184,6 +204,7 @@ Page({
     wx.request({
       url: app.globalData.urls + '/order/statistics',
       data: { token: app.globalData.token },
+      header: app.getRequestHeader(),
       success: function (res) {
         if (res.data.code == 0) {
           if (res.data.data.count_id_no_pay > 0) {

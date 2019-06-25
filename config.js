@@ -1,10 +1,19 @@
 var config = {
 	 //链接源，一般不需要修改
-	'url': 'https://api.it120.cc/',
+	//'url': 'https://api.it120.cc/',
 	
 	//这里填写你自己的工厂个性域名，工厂后台首页可以看到
-	'subDomain': 'fecshop',
-	
+  //'subDomain': 'fireshop',
+
+  //      https://api.it120.cc/fecshop
+  'url': 'http://fecshop.appserver.fancyecommerce.com',
+  'subDomain': '',
+
+  // 默认语言
+  'lang_code': 'zh',
+  // 默认货币
+  'currency_code': 'CNY',
+
 	//版本标识，这里不需要修改
 	'version': '1.0.0',
 	//订单自动关闭时间，默认60分钟，以分为单位，填0则不自动关闭订单
