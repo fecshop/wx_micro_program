@@ -1,5 +1,9 @@
 //获取应用实例
 var app = getApp();
+// 语言
+var util = require('../../utils/util.js')
+import event from '../../utils/event'
+
 function countdown(that) {
   var second = that.data.second;
   var home = that.data.home;
@@ -22,6 +26,10 @@ function countdown(that) {
 Page({
   data: {
     second: 6,
+    //语言 - begin
+    language: '',
+    categoryId: '',
+    //语言 - end
     home: 0
   },
 
@@ -32,6 +40,12 @@ Page({
     wx.switchTab({
       url: '../index/index'
     })
+  },
+  setLanguage() {
+    this.setData({
+      language: wx.T.getLanguage()
+    });
+    this.initStart();
   },
   tapBanner: function (e) {
     if (e.currentTarget.dataset.id != 0) {
@@ -48,6 +62,17 @@ Page({
     countdown(that);
     //var request_header = app.getRequestHeader();
     //console.log(request_header);
+    // 语言
+    // 设置当前页面的language变量 - 每个页面都要有
+    this.setLanguage();
+    event.on("languageChanged", this, this.setLanguage); // (2)
+    // 设置当前页面的language Index - 每个页面都要有
+    wx.T.setLocaleByIndex(wx.T.langIndex);
+    // 语言 - 结束
+    this.initStart()
+  },
+  initStart: function() {
+    var that = this;
     wx.request({
       url: app.globalData.urls + '/wx/start/first', //  '/banner/list',
       header: app.getRequestHeader(),
@@ -61,11 +86,10 @@ Page({
           that.setData({
             sales: res.data.data
           });
-          app.saveReponseHeader(res); 
+          app.saveReponseHeader(res);
           //header
         }
       }
     })
-
   }
 });

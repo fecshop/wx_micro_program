@@ -102,15 +102,20 @@ page {
 }
 
 .type-box {
-  padding: 5px 0;
-  height: 70rpx;
-  line-height: 70rpx;
+  padding:5px 0;
+height:auto;
+line-height:40rpx;
+margin:20rpx 0;
+text-align:left;
+
 }
 
 .type-navbar-item {
-  font-size: 28rpx;
-  text-align: center;
-  border-left: 2px solid #fff;
+  font-size:25rpx;
+text-align:left;
+border-left:70rpx;
+padding-left:20rpx;
+
 }
 
 .type-item-on {

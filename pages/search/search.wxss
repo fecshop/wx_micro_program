@@ -8,7 +8,14 @@
   box-sizing: border-box;
   overflow: hidden;
 }
-
+page{
+height:100%
+}
+.goods-container {
+  width: 100%;
+  margin-bottom: 0px;
+  height:100%;
+}
 .type-header-menu .type-search {
   width: 690rpx;
   margin-left: 30rpx;
@@ -54,6 +61,7 @@
 }
 .goods-none {
   margin-top: 25%;
+  margin-bottom: 25%;
 }
 
 .goods-none image {
@@ -164,4 +172,34 @@
 	border-radius: 5rpx;
 	margin-right: 20rpx;
 	margin-bottom: 20rpx;
+}
+
+.goods-list-title {
+  font-size: 30rpx;
+  color: #333;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.goods-originalPrice {
+  padding-left:20rpx;
+  font-size:30rpx;
+  color:#999;
+  text-decoration:line-through;
+  line-height:52rpx;
+  display:inline-block;
+
+}
+
+.goods-price {
+color:#b5272d;
+font-size:30rpx;
+padding-top:10rpx;
+display:inline;
+
+}
+.goods-list-money {
+  font-size: 30rpx;
+  color: #ab2b2b;
 }

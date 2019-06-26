@@ -1,22 +1,25 @@
-<navigation id='Navigation' show-icon="{{true}}" title="分类列表" show-title="{{true}}" class=""></navigation>
+<navigation id='Navigation' show-icon="{{true}}" title="{{language.category_list}}" show-title="{{true}}" class=""></navigation>
 <view class="container {{iphone}}">
-  <view class="goods-container">
-    <view class="goods-box" wx:for-items="{{goods}}" wx:key="{{index}}" bindtap="toDetailsTap" data-id="{{item.id}}">
+  <scroll-view class="goods-container" bindscrolltolower="loadProduct" scroll-y="true" style = "height:100%;position: relative;" scroll-into-view="{{toView}}" scroll-with-animation = "true" >
+    <view class="goods-box" wx:for-items="{{goods}}" wx:key="{{index}}" bindtap="toDetailsTap" data-id="{{item.id}}"   >
       <view class="img-box">
-        <image src="{{item.pic}}_m" class="image" mode="widthFix" lazy-load="true" />
-        <view class="goods-characteristic">
-          <text>{{item.characteristic}}</text>
-        </view>
+        <image src="{{item.pic}}" class="image" mode="widthFix" lazy-load="true" />
+        
       </view>
-      <view class="goods-title">{{item.name}}</view>
-      <view style='display:flex;'>
-        <view class="goods-price">Ұ{{item.minPrice}}</view>
-        <view class="goods-price-naver">已售{{item.numberOrders}}</view>
-      </view>
+      <view class="goods-list-title">{{item.name}}</view>
+      
+      <block wx:if="{{item.special_price}}" >
+	    <view class="goods-price">{{item.special_price.symbol}} {{item.special_price.value}}</view>
+      <view class="goods-originalPrice">{{item.price.symbol}} {{item.price.value}}</view>
+      </block>
+      <block wx:if="{{!item.special_price}}" >
+      <view class="goods-list-money">{{item.price.symbol}} {{item.price.value}}</view>
+      </block>
     </view>
-  </view>
-  <view hidden="{{loadingMoreHidden ? true : false}}" class="no-more-goods">
-    <image src="/images/empty_goods.png" class="no-order-img"></image>
-    <view class="text">还没有商品呢</view>
-  </view>
+    <view hidden="{{loadingMoreHidden ? true : false}}" class="no-more-goods">
+      <image src="/images/empty_goods.png" class="no-order-img"></image>
+      <view class="text">{{language.empty_product}}</view>
+    </view>
+  </scroll-view>
+  
 </view>

@@ -2,7 +2,7 @@
 <view class="container" wx:for="{{sales}}" wx:key="id">
   <view class="tab-image">
     <image bindtap="tapBanner" data-id="{{item.businessId}}" class="bgImages" src="{{item.picUrl}}" />
-    <view class="gohome" bindtap="goHome">跳过广告 {{second}}</view>
+    <view class="gohome" bindtap="goHome">{{language.skip_ads}} {{second}}</view>
   </view>
   <view bindtap="home" class="logo">
     <view class="title">{{item.title}}</view>

@@ -16,6 +16,10 @@ Component({
 		  type: Boolean,
 		  default: true
 		},
+    yourSearchContent: {
+      type: String,
+      default: ''
+    },
 		//是否显示搜索框
 		showSearch: {
 		  type: Boolean,
@@ -26,6 +30,7 @@ Component({
   data: {
     statusBarHeight: 0,
     titleBarHeight: 0,
+    //yours: '搜索你关注的内容',
   },
 
   ready: function () {

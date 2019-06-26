@@ -1,4 +1,4 @@
-<navigation id='Navigation' show-search='{{true}}'></navigation>
+<navigation id='Navigation' show-search='{{true}}'  your-search-content='{{language.youSearchContent}}'></navigation>
 <view class="container">
   <view class="type-container-boxx">
     <view class="type-container">
@@ -13,7 +13,7 @@
         <swiper class="swiper_box" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" bindchange="swiperchange">
           <block wx:for="{{banners}}" wx:key="id">
             <swiper-item>
-              <image bindtap="toDetailsTap" data-id="{{item.productId}}" src="{{item.picUrl}}" class="slide-image" mode="widthFix" />
+              <image bindtap="toDetailsTap" data-id="{{item.productId}}" src="{{item.picUrl}}_m" class="slide-image" mode="widthFix" />
             </swiper-item>
           </block>
         </swiper>

@@ -1,5 +1,9 @@
 // pages/search/search.js
 const app = getApp()
+// 语言
+var util = require('../../utils/util.js')
+import event from '../../utils/event'
+
 Page({
 
 	/**
@@ -7,10 +11,17 @@ Page({
 	 */
 	data: {
 		search: true,
+    searchs: [],
 		noneHidden: true,
 		searchHidden: true,
+    isLoadProduct: false,
 		recentSearch: [],
 		searchValue: '',
+    page: 0,
+    //语言 - begin
+    language: '',
+    categoryId: '',
+    //语言 - end
 	},
 	getRecentSearch: function() {
 		let recentSearch = wx.getStorageSync('recentSearch');
@@ -27,9 +38,18 @@ Page({
 	goSearch:function(e){
 		this.search(e)
 	},
+  setLanguage() {
+    this.setData({
+      language: wx.T.getLanguage()
+    });
+  },
 	search: function(e) {
 		let that = this
 		let keywords;
+    that.setData({
+      searchs: [],
+      page: 0,
+    });
 		e.detail.value? keywords= e.detail.value: keywords = e.currentTarget.dataset.text,
 		that.data.searchValue = keywords;
 		if (that.data.searchValue) {
@@ -43,33 +63,55 @@ Page({
 				})
 			}
 		}
-
-		wx.request({
-			url: app.globalData.urls + '/shop/goods/list',
-			data: {
-				nameLike: keywords
-			},
-			success: function(res) {
-				if (res.data.code == 0) {	
-					var searchs = [];
-					for (var i = 0; i < res.data.data.length; i++) {
-						searchs.push(res.data.data[i]);
-					}
-					that.setData({
-						searchs: searchs,
-						searchHidden: false,
-						noneHidden: true
-					});
-				} else {
-					that.setData({
-						searchHidden: true,
-						noneHidden: false
-					});
-				}
-			}
-		})
-
+    that.searchProduct()
 	},
+  searchProduct: function() {
+    var that = this
+    that.setData({
+      page: that.data.page + 1
+    });
+    wx.request({
+      url: app.globalData.urls + '/catalogsearch/index/wxindex',
+      data: {
+        q: that.data.searchValue,
+        p: that.data.page
+      },
+      header: app.getRequestHeader(),
+      success: function (res) {
+        if (res.data.code == 200 && res.data.data.products.length > 0) {
+          var searchs = that.data.searchs;
+          for (var i = 0; i < res.data.data.products.length; i++) {
+            searchs.push(res.data.data.products[i]);
+          }
+          that.setData({
+            searchs: searchs,
+            searchHidden: false,
+            noneHidden: true
+          });
+          that.setData({
+            isLoadProduct: false,
+          });
+        } else {
+          that.setData({
+            searchHidden: false,
+            noneHidden: false
+          });
+        }
+        app.saveReponseHeader(res);
+        
+      }
+    })
+  },
+  loadProduct: function () {
+    console.log("eeeeee")
+    var that = this
+    if (that.data.isLoadProduct == false) {
+      that.setData({
+        isLoadProduct: true,
+      });
+      that.searchProduct()
+    }
+  },
 	searchFocus: function() {
 		this.setData({
 			search: false,
@@ -93,7 +135,7 @@ Page({
 	 * 生命周期函数--监听页面加载
 	 */
 	onLoad: function(options) {
-
+    this.setLanguage()
 	},
 
 	/**

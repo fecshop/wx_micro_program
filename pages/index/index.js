@@ -33,6 +33,7 @@ Page({
 	onShow(){
 		var that = this
 		// app.fadeInOut(this,'fadeAni',0)
+    /*
 		setTimeout(function () {
 		  if (app.globalData.usinfo == 0) {
 		    that.setData({
@@ -41,6 +42,7 @@ Page({
 		    wx.hideTabBar();
 		  }
 		}, 800)
+    */
 		//获取购物车商品数量
 		app.getShopCartNum()
 	},
