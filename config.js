@@ -6,7 +6,7 @@ var config = {
   //'subDomain': 'fireshop',
 
   //      https://api.it120.cc/fireshop
-  'url': 'http://fecshop.appserver.fancyecommerce.com',
+  'url': 'https://fecshop.appserver.fancyecommerce.com',
   'subDomain': '',
 
   // 默认语言

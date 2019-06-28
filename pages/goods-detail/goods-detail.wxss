@@ -2,6 +2,7 @@
 
 page {
   background-color: #fff;
+  height:100%;
 }
 
 .container {
@@ -64,6 +65,7 @@ swiper-item image {
   font-size: 26rpx;
   height: 90rpx;
   line-height: 90rpx;
+  padding-left:15rpx;
   color: #333;
   border-bottom: 30rpx solid #f5f5f5;
 }
@@ -307,6 +309,7 @@ swiper-item image {
 
 .goods-text {
   padding-left: 10rpx;
+  padding-right: 10rpx;
 }
 
 .des-imgs {
@@ -599,9 +602,10 @@ swiper-item image {
 }
 
 .goods-reputa-list {
-  width: 100%;
-  border-bottom: 1px dashed #f5f5f5;
-  margin-bottom: 30rpx;
+  width:100%;
+  border-bottom:1px dashed #f5f5f5;
+  margin-bottom:30rpx;
+  padding:10rpx 0;
 }
 
 .goods-reputa-avatar {
@@ -618,8 +622,10 @@ swiper-item image {
 }
 
 .goods-reputa-mark {
-  float: left;
-  width: 75%;
+  float:left;
+  width:100%;
+  padding-left:25rpx;
+
 }
 
 .goods-reputa-user {
@@ -640,7 +646,7 @@ swiper-item image {
   font-size: 28rpx;
   color: #333;
   padding-top: 8px;
-  padding-left: 5px;
+  padding-left: 0px;
 }
 
 .goods-mark-day {

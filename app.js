@@ -18,7 +18,7 @@ App({
 				}
 			}
 		});
-		that.login()
+		//that.login()
     
     // 初始化货币
     var fecshop_currency = wx.getStorageSync('fecshop-currency');
@@ -43,7 +43,7 @@ App({
 		that.globalData.share = that.siteInfo.shareProfile;
 	},
 	siteInfo: require("config.js"),
-  
+  /*
 	login: function () {
 	  var that = this;
 	  var token = that.globalData.token;
@@ -90,7 +90,7 @@ App({
 	    }
 	  });
 	},
-  
+  */
 	sendTempleMsg: function (orderId, trigger, template_id, form_id, page, postJsonString) {
 	  var that = this;
 	  wx.request({
@@ -172,7 +172,30 @@ App({
     if (fecshop_access_token) {
       headers['access-token'] = fecshop_access_token;
     }
-    headers['fecshop-test'] = 'test';
+    console.log(headers);
+
+    return headers;
+  },
+  getPostRequestHeader: function () {
+    var headers = {};
+    // 从数据fecshop-data中取出来值
+    var fecshop_uuid = wx.getStorageSync('fecshop-uuid');
+    var fecshop_lang = wx.getStorageSync('fecshop-lang');
+    var fecshop_currency = wx.getStorageSync('fecshop-currency');
+    var fecshop_access_token = wx.getStorageSync('access-token');
+    if (fecshop_uuid) {
+      headers['fecshop-uuid'] = fecshop_uuid;
+    }
+    if (fecshop_lang) {
+      headers['fecshop-lang'] = fecshop_lang;
+    }
+    if (fecshop_currency) {
+      headers['fecshop-currency'] = fecshop_currency;
+    }
+    if (fecshop_access_token) {
+      headers['access-token'] = fecshop_access_token;
+    }
+    headers['Content-Type'] = 'application/x-www-form-urlencoded';
     console.log(headers);
 
     return headers;
@@ -197,6 +220,7 @@ App({
     }
     
   },
+  
   // 设置页面底部的购物车产品个数
 	getShopCartNum:function(){
 		var that = this
@@ -205,6 +229,8 @@ App({
 		  success: function (res) {
 		    if (res.data) {
 		      if (res.data.shopNum > 0) {
+            console.log("res.data.shopNum")
+            console.log(res.data.shopNum)
 		        wx.setTabBarBadge({
 		          index: 2,
 		          text: '' + res.data.shopNum + ''

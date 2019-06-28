@@ -1,0 +1,75 @@
+<view class="container">
+	<view class="userinfo">
+    <open-data class="userinfo-avatar" type="userAvatarUrl"></open-data>
+    <view class="iser-info-box">
+      <open-data class="userinfo-nickname" type="userNickName"></open-data>
+      
+    </view>
+	</view>
+  <view class="userinfo-notice" wx:if="{{noticeList}}">
+    <image src="../../images/gonggao.png" />
+    <swiper wx:if="{{noticeList}}" class="notice_swiper" vertical="true" autoplay="true" circular="true" interval="6000">
+      <navigator wx:for-items="{{noticeList.dataList}}" wx:key="id" url="/pages/notice/notice?id={{item.id}}" hover-class="none" open-type="navigate">
+        <swiper-item >
+          <view class="notice_itemr">{{item.title}}</view>
+        </swiper-item>
+      </navigator>
+    </swiper>
+  </view>
+  <view class="userinfo-item">
+    <navigator url="/pages/order-list/order-list" hover-class="none">{{language.bind_your_account}}</navigator>
+  </view>
+
+  <view class="tab-header" bindtap="tabFun">
+    <view class="{{tabArr.curHdIndex=='0'? 'active' : ''}}" id="tab-hd01" data-id="0">{{language.create_account}}</view>
+    <view class="{{tabArr.curHdIndex=='1'? 'active' : ''}}" id="tab-hd02" data-id="1">{{language.has_account}}</view>
+  </view>
+  <view class="tab-container">
+    <view class="tab-item {{tabArr.curBdIndex=='0'? 'active' : ''}}">
+      <form bindsubmit="bindNewSave">
+        <view class="form-box">
+          <view class="row-wrap">
+            <view class="label">{{language.email}}</view>
+            <view class="label-right">
+              <input name="email" class="input" type="email" placeholder="Email" value="{{email}}" />
+            </view>
+          </view>
+          <view class="row-wrap">
+            <view class="label">{{language.password}}</view>
+            <view class="label-right">
+              <input name="password" class="input" type="password" placeholder="password" value="{{password}}" />
+            </view>
+          </view>
+          
+        </view>
+        <button type="warn" class="save-btn" formType="submit">{{language.bind_account}}</button>
+        
+      </form>
+    </view>
+    <view class="tab-item {{tabArr.curBdIndex=='1'? 'active' : ''}}">
+      <form bindsubmit="bindHistorySave">
+        <view class="form-box">
+          <view class="row-wrap">
+            <view class="label">{{language.email}}</view>
+            <view class="label-right">
+              <input name="email" class="input" type="email" placeholder="Email" value="{{email}}" />
+            </view>
+          </view>
+          <view class="row-wrap">
+            <view class="label">{{language.password}}</view>
+            <view class="label-right">
+              <input name="password" class="input" type="password" placeholder="password" value="{{password}}" />
+            </view>
+          </view>
+          
+        </view>
+        <button type="warn" class="save-btn" formType="submit">{{language.bind_account}}</button>
+        
+      </form>
+    </view>
+  </view>
+
+
+
+  
+</view>

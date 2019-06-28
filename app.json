@@ -3,6 +3,7 @@
     "pages/start/start",
     "pages/index/index",
     "pages/logs/logs",
+    "pages/login/login",
     "pages/my/my",
     "pages/cart/cart",
     "pages/goods-detail/goods-detail",
@@ -56,7 +57,7 @@
         "text": "购物车"
       },
       {
-        "pagePath": "pages/my/my",
+        "pagePath": "pages/login/login",
         "iconPath": "images/nav/my-off.png",
         "selectedIconPath": "images/nav/my-on.png",
         "text": "我的"
