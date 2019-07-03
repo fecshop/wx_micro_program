@@ -2,7 +2,7 @@
 <view class="goods-container">
   <view class="goods-box" wx:for-items="{{favList}}" wx:key="{{index}}" bindtap="toDetailsTap" data-id="{{item.goodsId}}">
     <view class="img-box">
-      <image src="{{item.pic}}_m" class="image" mode="aspectFill" lazy-load="true" />
+      <image src="{{item.pic}}" class="image" mode="aspectFill" lazy-load="true" />
     </view>
     <view class="goods-title">{{item.goodsName}}</view>
     <view class="good-money">收藏时间：{{item.dateAdd}}</view>

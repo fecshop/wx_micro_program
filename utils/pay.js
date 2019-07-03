@@ -7,24 +7,23 @@ function wxpay(app, money, orderId, redirectUrl) {
     nextAction = { type: 0, id: orderId };
   }
   wx.request({
-    url: app.globalData.urls + '/pay/wxapp/get-pay-data',
+    url: app.globalData.urls + '/checkout/wx/verifyinfo',
     data: {
-      token:app.globalData.token,
-      money:money,
-      remark: remark,
-      payName:"在线支付",
-      nextAction: nextAction
+      orderId: orderId,
     },
-    //method:'POST',
+    header: app.getPostRequestHeader(),
+    method:'POST',
     success: function(res){
-      if(res.data.code == 0){
+      app.saveReponseHeader(res);
+      if(res.data.code == 200){
         // 发起支付
+        var jsApiParameters = res.data.data.jsApiParameters;
         wx.requestPayment({
-          timeStamp:res.data.data.timeStamp,
-          nonceStr:res.data.data.nonceStr,
-          package:'prepay_id=' + res.data.data.prepayId,
-          signType:'MD5',
-          paySign:res.data.data.sign,
+          timeStamp: jsApiParameters.timeStamp,
+          nonceStr: jsApiParameters.nonceStr,
+          package: jsApiParameters.package, // 'prepay_id=' + res.data.data.prepayId,
+          signType: jsApiParameters.signType, //'MD5',
+          paySign: jsApiParameters.paySign,
           fail:function (aaa) {
             wx.showToast({title: '支付失败'})
           },

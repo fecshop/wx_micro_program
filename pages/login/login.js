@@ -44,6 +44,7 @@ Page({
     });
     //this.initCategory();
   },
+  // 
   loginAccount: function(){
     var that = this;
     wx.showLoading({
@@ -56,12 +57,14 @@ Page({
       success: function (res) {
         wx.hideLoading();
         // 如果已经登陆，则跳转page/my/my
-        if (res.data.code == 1100006) {
-          
-          wx.navigateTo({
-            url: "/pages/my/my"
-          })
-        } else if (res.data.code == 200)  {  // 如果没有登陆，则进行微信登陆，获取code
+        if (res.data.code == '1100006') {
+          wx.navigateBack({
+            delta: 1
+          });
+          //wx.navigateTo({
+          //  url: "/pages/my/my"
+          //})
+        } else if (res.data.code == '200')  {  // 如果没有登陆，则进行微信登陆，获取code
           that.wxLogin()
         }
         app.saveReponseHeader(res);
@@ -96,10 +99,12 @@ Page({
               return
             }
             if (res.data.code == '200') { // 登陆成功，进行跳转
-              
-              wx.navigateTo({
-                url: "/pages/my/my"
-              })
+              wx.navigateBack({
+                delta: 1
+              });
+              //wx.navigateTo({
+              //  url: "/pages/my/my"
+              //})
             } else { // 其他的失败情况，重新进行登陆操作，最大5次
               // 如果获取微信数据失败，则重复获取，最大5次
               
@@ -126,12 +131,10 @@ Page({
               });
               return;
             }
-            
           }
         });
       }
     });
-
   },
 
   tabFun: function (e) {
@@ -257,10 +260,12 @@ Page({
             showCancel: false
           });
         } else if (res.data.code == '200') { // 没有相关用户，需要绑定
-
-          wx.navigateTo({
-            url: "/pages/my/my"
-          })
+          //wx.navigateTo({
+          //  url: "/pages/my/my"
+          //})
+          wx.navigateBack({
+            delta: 1
+          });
         } else {
           wx.showModal({
             title: "提示",

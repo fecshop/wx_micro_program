@@ -9,6 +9,7 @@ Page({
     if (e) {
       that.setData({
         money: e.money,
+        symbol: e.symbol,
         order: e.order,
         id: e.id
       });
@@ -31,46 +32,9 @@ Page({
     var that = this;
     var orderId = e.currentTarget.dataset.id;
     var money = e.currentTarget.dataset.money;
-    wx.request({
-      url: app.globalData.urls + '/user/amount',
-      data: {
-        token: app.globalData.token
-      },
-      success: function (res) {
-        if (res.data.code == 0) {
-          // res.data.data.balance
-          money = money - res.data.data.balance;
-          if (money <= 0) {
-            // 直接使用余额支付
-            wx.request({
-              url: app.globalData.urls + '/order/pay',
-              method: 'POST',
-              header: {
-                'content-type': 'application/x-www-form-urlencoded'
-              },
-              data: {
-                token: app.globalData.token,
-                orderId: orderId
-              },
-              success: function (res2) {
-                wx.redirectTo({
-                  url: "/pages/order-list/order-list?currentType=1&share=1"
-                });
-              }
-            })
-          } else {
-            wxpay.wxpay(app, money, orderId, "/pages/order-list/order-list?currentType=1&share=1");
-          }
-        } else {
-          wx.showModal({
-            title: '错误',
-            content: '无法获取用户资金信息',
-            showCancel: false
-          })
-        }
-      }
-    })
+    wxpay.wxpay(app, money, orderId, "/pages/order-list/order-list?currentType=1&share=1");
   },
+  /*
   closeOreder: function () {
     wx.showModal({
       title: '',
@@ -88,5 +52,6 @@ Page({
       }
     })
   }
+  */
 
 })

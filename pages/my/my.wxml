@@ -21,28 +21,29 @@
     <navigator url="/pages/order-list/order-list" hover-class="none">我的订单</navigator>
   </view>
   <view class="user-cart-list">
-    <navigator hover-class="none" class="cart-list" url="/pages/order-list/order-list?currentType=0">
+    <navigator hover-class="none" class="cart-list" url="/pages/order-list/order-list?currentType=1">
       <view wx:if="{{noplay}}" class="red-dot">{{noplay}}</view>
       <image src="../../images/order-details/orderform_pay.png"></image>
       待付款
     </navigator>
-    <navigator hover-class="none" class="cart-list" url="/pages/order-list/order-list?currentType=1">
+    <navigator hover-class="none" class="cart-list" url="/pages/order-list/order-list?currentType=2">
       <view wx:if="{{notransfer}}" class="red-dot">{{notransfer}}</view>
       <image src="../../images/order-details/orderform_ship.png"></image>
       待发货
     </navigator>
-    <navigator hover-class="none" class="cart-list" url="/pages/order-list/order-list?currentType=2">
+    <navigator hover-class="none" class="cart-list" url="/pages/order-list/order-list?currentType=3">
       <view wx:if="{{noconfirm}}" class="red-dot">{{noconfirm}}</view>
       <image src="../../images/order-details/delivering.png"></image>
       待收货
     </navigator>
-    <navigator hover-class="none" class="cart-list" url="/pages/order-list/order-list?currentType=3">
+    <navigator hover-class="none" class="cart-list" url="/pages/order-list/order-list?currentType=4">
       <view wx:if="{{noreputation}}" class="red-dot">{{noreputation}}</view>
       <image src="../../images/order-details/orderform.png"></image>
-      待评价
+      已完成
     </navigator>
   </view>
   <view class="userinfo-item-box">
+    <!--
     <navigator  hover-class="none" class="userinfo-item" url="/pages/withdraw/withdraw">
       <image src="../../images/profile_tegral.png"></image>
       <text>{{balance}}元</text>
@@ -57,6 +58,7 @@
       <image src="../../images/profile_ticket.png"></image>
       <view>我的礼券</view>
     </navigator>
+    -->
     <navigator hover-class="none" class="userinfo-item" url="/pages/fav-list/fav-list">
       <image src="../../images/profile_collection.png"></image>
       <view>我的收藏</view>

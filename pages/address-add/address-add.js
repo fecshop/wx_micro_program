@@ -5,6 +5,7 @@ Page({
   data: {
     provinces: [],
     citys: [],
+    stateArr: [],
     districts: [],
     selProvince: '请选择',
     selCity: '请选择',
@@ -56,11 +57,15 @@ Page({
       return
     }
     var cityId = commonCityData.cityData[this.data.selProvinceIndex].cityList[this.data.selCityIndex].id;
+    var cityName = commonCityData.cityData[this.data.selProvinceIndex].cityList[this.data.selCityIndex].name;
     var districtId;
+    var areaStr;
     if (this.data.selDistrict == "请选择" || !this.data.selDistrict) {
       districtId = '';
+      areaStr = '';
     } else {
       districtId = commonCityData.cityData[this.data.selProvinceIndex].cityList[this.data.selCityIndex].districtList[this.data.selDistrictIndex].id;
+      areaStr = commonCityData.cityData[this.data.selProvinceIndex].cityList[this.data.selCityIndex].districtList[this.data.selDistrictIndex].name;
     }
     if (address == "") {
       wx.showModal({
@@ -85,11 +90,27 @@ Page({
     } else {
       apiAddid = 0;
     }
+    
+    
+    var stateCode = that.getStateCode()
     wx.request({
-      url: app.globalData.urls + '/user/shipping-address/' + apiAddoRuPDATE,
+      url: app.globalData.urls + '/customer/address/save',
+      header: app.getPostRequestHeader(),
+      method: 'POST',
       data: {
-        token: app.globalData.token,
-        id: apiAddid,
+        address_id: apiAddid,
+        first_name: linkMan,
+        last_name: '',
+        // email
+        telephone: mobile,
+        addressCountry: 'CN',
+        addressState: stateCode,
+        city: cityName,
+        area: areaStr,
+        street1: address,
+        zip: code,
+        isDefaultActive: 1,
+        /*
         provinceId: commonCityData.cityData[this.data.selProvinceIndex].id,
         cityId: cityId,
         districtId: districtId,
@@ -98,22 +119,38 @@ Page({
         mobile: mobile,
         code: code,
         isDefault: 'true'
+        */
       },
       success: function (res) {
-        if (res.data.code != 0) {
+        if (res.data.code != 200) {
           // 登录错误 
           wx.hideLoading();
           wx.showModal({
             title: '失败',
-            content: res.data.msg,
+            content: '保存地址失败',
             showCancel: false
           })
           return;
         }
+        app.saveReponseHeader(res);
         // 跳转到结算页面
         wx.navigateBack({})
       }
     })
+  },
+
+  getStateCode: function() {
+    var stateName = commonCityData.cityData[this.data.selProvinceIndex].name;
+    var stateArr = this.data.stateArr;
+    if (stateArr) {
+      for (var x in stateArr) {
+        var stateArrName = stateArr[x];
+        if (stateArrName == stateName) {
+          return x;
+        }
+      }
+    }
+    return stateName;
   },
   initCityData: function (level, obj) {
     if (level == 1) {
@@ -185,22 +222,61 @@ Page({
       // 初始化原数据
       wx.showLoading();
       wx.request({
-        url: app.globalData.urls + '/user/shipping-address/detail',
+        url: app.globalData.urls + '/customer/address/edit',
+        header: app.getRequestHeader(),
         data: {
-          token: app.globalData.token,
-          id: id
+          address_id: id
         },
         success: function (res) {
           wx.hideLoading();
-          if (res.data.code == 0) {
+          if (res.data.code == 200) {
+            var address = res.data.data.address
+            var addressData = {
+              address: address.street1,
+              code: address.zip,
+              id: address.address_id,
+              linkMan: address.first_name + address.last_name,
+              mobile: address.telephone,
+              provinceStr: address.stateStr,
+              cityStr: address.city,
+              areaStr: address.area,
+            }
             that.setData({
               id: id,
-              addressData: res.data.data,
-              selProvince: res.data.data.provinceStr,
-              selCity: res.data.data.cityStr,
-              selDistrict: res.data.data.areaStr
+              stateArr: address.stateArr,
+              addressData: addressData,
+              selProvince: addressData.provinceStr,
+              selCity: addressData.cityStr,
+              selDistrict: addressData.areaStr,
             });
-            that.setDBSaveAddressId(res.data.data);
+            // 设置数据/
+            let provinceName = addressData.provinceStr;
+            let cityName = addressData.cityStr;
+            let diatrictName = addressData.areaStr;
+            let retSelIdx = 0;
+
+            for (var i = 0; i < commonCityData.cityData.length; i++) {
+              if (provinceName == commonCityData.cityData[i].name) {
+                let eventJ = { detail: { value: i } };
+                that.bindPickerProvinceChange(eventJ);
+                that.data.selProvinceIndex = i;
+                for (var j = 0; j < commonCityData.cityData[i].cityList.length; j++) {
+                  if (cityName == commonCityData.cityData[i].cityList[j].name) {
+                    //that.data.selCityIndex = j;
+                    eventJ = { detail: { value: j } };
+                    that.bindPickerCityChange(eventJ);
+                    for (var k = 0; k < commonCityData.cityData[i].cityList[j].districtList.length; k++) {
+                      if (diatrictName == commonCityData.cityData[i].cityList[j].districtList[k].name) {
+                        //that.data.selDistrictIndex = k;
+                        eventJ = { detail: { value: k } };
+                        that.bindPickerChange(eventJ);
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            //that.setDBSaveAddressId(addressData);
             return;
           } else {
             wx.showModal({
@@ -209,20 +285,27 @@ Page({
               showCancel: false
             })
           }
+          app.saveReponseHeader(res);
         }
       })
     }
   },
+
+  /*
   setDBSaveAddressId: function (data) {
+    console.log(data.provinceStr);
+    console.log(data.cityStr);
+    console.log(data.areaStr);
     var retSelIdx = 0;
     for (var i = 0; i < commonCityData.cityData.length; i++) {
-      if (data.provinceId == commonCityData.cityData[i].id) {
+      if (data.provinceStr == commonCityData.cityData[i].name) {
+        console.log(i)
         this.data.selProvinceIndex = i;
         for (var j = 0; j < commonCityData.cityData[i].cityList.length; j++) {
-          if (data.cityId == commonCityData.cityData[i].cityList[j].id) {
+          if (data.cityStr == commonCityData.cityData[i].cityList[j].name) {
             this.data.selCityIndex = j;
             for (var k = 0; k < commonCityData.cityData[i].cityList[j].districtList.length; k++) {
-              if (data.districtId == commonCityData.cityData[i].cityList[j].districtList[k].id) {
+              if (data.areaStr == commonCityData.cityData[i].cityList[j].districtList[k].name) {
                 this.data.selDistrictIndex = k;
               }
             }
@@ -231,6 +314,7 @@ Page({
       }
     }
   },
+  */
   selectCity: function () {
 
   },
@@ -243,13 +327,17 @@ Page({
       success: function (res) {
         if (res.confirm) {
           wx.request({
-            url: app.siteInfo.url + app.siteInfo.subDomain + '/user/shipping-address/delete',
+            url: app.globalData.urls + '/customer/address/remove',
+            //url: app.siteInfo.url + app.siteInfo.subDomain + '/user/shipping-address/delete',
+            header: app.getPostRequestHeader(),
             data: {
-              token: app.globalData.token,
-              id: id
+              address_id: id
             },
             success: (res) => {
-              wx.navigateBack({})
+              if (res.data.code == 200) {
+                wx.navigateBack({})
+              }
+              app.saveReponseHeader(res);
             }
           })
         } else if (res.cancel) {

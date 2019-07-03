@@ -1,3 +1,4 @@
+<navigation id='Navigation' show-icon="{{true}}" title="{{language.account_login}}" show-title="{{true}}" class=""></navigation>
 <view class="container">
 	<view class="userinfo">
     <open-data class="userinfo-avatar" type="userAvatarUrl"></open-data>
@@ -16,10 +17,11 @@
       </navigator>
     </swiper>
   </view>
+  <!--
   <view class="userinfo-item">
     <navigator url="/pages/order-list/order-list" hover-class="none">{{language.bind_your_account}}</navigator>
   </view>
-
+  -->
   <view class="tab-header" bindtap="tabFun">
     <view class="{{tabArr.curHdIndex=='0'? 'active' : ''}}" id="tab-hd01" data-id="0">{{language.create_account}}</view>
     <view class="{{tabArr.curHdIndex=='1'? 'active' : ''}}" id="tab-hd02" data-id="1">{{language.has_account}}</view>

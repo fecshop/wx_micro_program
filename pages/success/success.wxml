@@ -4,7 +4,7 @@
     <image src="../../images/profile_tegral.png" />
     <view class="order-info">
       <view class="order-money">商品总额：
-        <text>¥ {{money}}</text>
+        <text>{{symbol}} {{money}}</text>
       </view>
       <view class="order-number">订单号：{{order}}</view>
     </view>
@@ -16,5 +16,5 @@
       <view class="addr-text">{{curAddressData.address}}</view>
     </view>
   </view>
-  <view class="pay-btn" bindtap="toPayTap" data-id="{{id}}" data-money="{{money}}">微信支付 ¥{{money}}</view>
+  <view class="pay-btn" bindtap="toPayTap" data-id="{{order}}" data-money="{{money}}">微信支付 {{symbol}}{{money}}</view>
 </view>

@@ -9,13 +9,14 @@ Page({
   selectTap: function (e) {
     var id = e.currentTarget.dataset.id;
     wx.request({
-      url: app.globalData.urls +'/user/shipping-address/update',
+      url: app.globalData.urls +'/customer/address/changedefault',
+      header: app.getPostRequestHeader(),
+      method: 'POST',
       data: {
-        token:app.globalData.token,
-        id:id,
-        isDefault:'true'
+        address_id:id
       },
       success: (res) =>{
+        app.saveReponseHeader(res);
         wx.navigateBack({})
       }
     })
@@ -43,14 +44,30 @@ Page({
   initShippingAddress: function () {
     var that = this;
     wx.request({
-      url: app.globalData.urls +'/user/shipping-address/list',
-      data: {
-        token:app.globalData.token
-      },
+      url: app.globalData.urls +'/checkout/onepage/getaddresslist',
+      header: app.getRequestHeader(),
+      data: { },
       success: (res) =>{
-        if (res.data.code == 0) {
+        if (res.data.code == 200) {
+          var addressColl = res.data.data.addressList
+          var addressList = []
+          for (var x in addressColl) {
+            var addressOne = addressColl[x]
+            var addressInfo = addressOne.address_info
+            addressList.push({
+              id: addressInfo.address_id,
+              isDefault: addressOne.is_default == "1" ? true : false,
+              linkMan: addressInfo.first_name + addressInfo.last_name,
+              mobile: addressInfo.telephone,
+              provinceStr: addressInfo.state,
+              cityStr: addressInfo.city,
+              areaStr: addressInfo.area,
+              address: addressInfo.street1,
+            })
+          }
+          console.log(addressList)
           that.setData({
-            addressList:res.data.data,
+            addressList: addressList,
             loadingMoreHidden: true
           });
         } else if (res.data.code == 700){
@@ -59,6 +76,7 @@ Page({
             loadingMoreHidden: false
           });
         }
+        app.saveReponseHeader(res);
       }
     })
   }

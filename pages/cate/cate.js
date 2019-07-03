@@ -188,6 +188,7 @@ Page({
   },
   onShow: function () {
     var that = this;
+    /*
     wx.getStorage({
       key: 'shopCarInfo',
       success: function (res) {
@@ -229,6 +230,7 @@ Page({
         }
       }
     })
+    */
   },
 
 })

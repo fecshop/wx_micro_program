@@ -2,7 +2,7 @@ var wxpay = require('../../utils/pay.js')
 var app = getApp()
 Page({
   data: {
-    statusType: ["待付款", "待发货", "待收货", "待评价", "已完成"],
+    statusType: ["全部订单","待付款", "待发货", "待收货",  "已完成"], //["待付款", "待发货", "待收货", "待评价", "已完成"],
     currentType: 0,
     tabClass: ["", "", "", "", ""],
 		bodyHeight:null
@@ -42,16 +42,17 @@ Page({
         if (res.confirm) {
           wx.showLoading();
           wx.request({
-            url: app.siteInfo.url + app.siteInfo.subDomain + '/order/close',
+            url: app.globalData.urls + '/customer/order/cancel',
             data: {
-              token: app.globalData.token,
               orderId: orderId
             },
+            header: app.getRequestHeader(),
             success: (res) => {
               wx.hideLoading();
-              if (res.data.code == 0) {
+              if (res.data.code == 200) {
                 that.onShow();
               }
+              app.saveReponseHeader(res);
             }
           })
         }
@@ -62,45 +63,7 @@ Page({
     var that = this;
     var orderId = e.currentTarget.dataset.id;
     var money = e.currentTarget.dataset.money;
-    wx.request({
-      url: app.siteInfo.url + app.siteInfo.subDomain + '/user/amount',
-      data: {
-        token: app.globalData.token
-      },
-      success: function (res) {
-        if (res.data.code == 0) {
-          // res.data.data.balance
-          money = money - res.data.data.balance;
-          if (money <= 0) {
-            // 直接使用余额支付
-            wx.request({
-              url: app.siteInfo.url + app.siteInfo.subDomain + '/order/pay',
-              method: 'POST',
-              header: {
-                'content-type': 'application/x-www-form-urlencoded'
-              },
-              data: {
-                token: app.globalData.token,
-                orderId: orderId
-              },
-              success: function (res2) {
-                wx.reLaunch({
-                  url: "/pages/my/my"
-                });
-              }
-            })
-          } else {
-            wxpay.wxpay(app, money, orderId, "/pages/my/my");
-          }
-        } else {
-          wx.showModal({
-            title: '错误',
-            content: '无法获取用户资金信息',
-            showCancel: false
-          })
-        }
-      }
-    })
+    wxpay.wxpay(app, money, orderId, "/pages/order-list/order-list?currentType=1&share=1");
   },
   onLoad: function (e) {
     var that = this;
@@ -121,6 +84,7 @@ Page({
     // 生命周期函数--监听页面初次渲染完成
 
   },
+  /*
   getOrderStatistics: function () {
     var that = this;
     wx.request({
@@ -163,6 +127,7 @@ Page({
       }
     })
   },
+  */
 	toConfirmTap:function(e){
 	  let that = this;
 	  let orderId = e.currentTarget.dataset.id;
@@ -174,25 +139,27 @@ Page({
 	        if (res.confirm) {
 	          wx.showLoading();
 	          wx.request({
-	            url: app.globalData.urls + '/order/delivery',
+	            url: app.globalData.urls + '/customer/order/delivery',
 	            data: {
-	              token: app.globalData.token,
 	              orderId: orderId
 	            },
+              header: app.getRequestHeader(),
 	            success: (res) => {
-	              if (res.data.code == 0) {
+	              if (res.data.code == 200) {
 	                that.onShow();
 	                // 模板消息，提醒用户进行评价
 	                let postJsonString = {};
 	                postJsonString.keyword1 = { value: that.data.orderDetail.orderInfo.orderNumber, color: '#173177' }
 	                let keywords2 = '您已确认收货，期待您的再次光临！';
-	                if (app.globalData.order_reputation_score) {
-	                  keywords2 += '立即好评，系统赠送您' + app.globalData.order_reputation_score +'积分奖励。';
-	                }
+	                //if (app.globalData.order_reputation_score) {
+	                //  keywords2 += '立即好评，系统赠送您' + app.globalData.order_reputation_score +'积分奖励。';
+	                //}
 	                postJsonString.keyword2 = { value: keywords2, color: '#173177' }
 	                app.sendTempleMsgImmediately(app.siteInfo.assessorderkey , formId,
 	                  '/pages/order-detail/order-detail?id=' + orderId, JSON.stringify(postJsonString));
 	              }
+                app.saveReponseHeader(res);
+                wx.hideLoading();
 	            }
 	          })
 	        }
@@ -204,29 +171,77 @@ Page({
     wx.showLoading();
     var that = this;
     var postData = {
-      token: app.globalData.token
+      //token: app.globalData.token
     };
-    postData.status = that.data.currentType;
-    this.getOrderStatistics();
+    var requestStatus = that.data.currentType;
+    var wxRequestOrderStatus = '';
+    if (requestStatus == 0) {
+      wxRequestOrderStatus = 'all'
+    } else {
+      wxRequestOrderStatus = requestStatus -1;
+    }
+    //this.getOrderStatistics();
     wx.request({
-      url: app.siteInfo.url + app.siteInfo.subDomain + '/order/list',
-      data: postData,
+      url: app.globalData.urls + '/customer/order/index',
+      data: {
+        wxRequestOrderStatus: wxRequestOrderStatus,
+        withItems: 1
+      },
+      header: app.getRequestHeader(),
       success: (res) => {
 				console.log(res)
         wx.hideLoading();
-        if (res.data.code == 0) {
+        if (res.data.code == 200) {
+          var orderList = res.data.data.orderList;
+          var orderListThis = [];
+          if (orderList) {
+            for (var x in orderList) {
+              var order = orderList[x];
+              var order_status = order.order_status
+              var statusStr = '';
+              var status = 0;
+              if (order_status == 'payment_pending' || order_status == 'payment_processing') {
+                statusStr = '待支付'
+                status = 0
+              } else if (order_status == 'payment_confirmed') {
+                statusStr = '已支付待发货'
+                status = 1
+              } else if (order_status == 'payment_canceled') {
+                statusStr = '已取消'
+                status = -1
+              } else if (order_status == 'dispatched') {
+                statusStr = '已发货待确认'
+                status = 2
+              } else if (order_status == 'completed') {
+                statusStr = '已完成'
+                status = 3
+              } 
+              orderListThis.push({
+                statusStr: statusStr,
+                id: order.increment_id,
+                status: status,
+                orderNumber: order.increment_id,
+                remark: order.remark,
+                amountReal: order.grand_total,
+                product_items: order.item_products,
+                currency_symbol: order.currency_symbol
+              })
+            }
+          }
+          
           that.setData({
-            orderList: res.data.data.orderList,
-            logisticsMap: res.data.data.logisticsMap,
-            goodsMap: res.data.data.goodsMap
+            orderList: orderListThis,
+            //logisticsMap: res.data.data.logisticsMap,
+            //goodsMap: res.data.data.goodsMap
           });
         } else {
           this.setData({
             orderList: null,
-            logisticsMap: {},
-            goodsMap: {}
+            //logisticsMap: {},
+            //goodsMap: {}
           });
         }
+        app.saveReponseHeader(res);
       }
     })
 		var winInfo = wx.getSystemInfo({

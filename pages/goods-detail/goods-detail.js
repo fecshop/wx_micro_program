@@ -323,7 +323,8 @@ Page({
   labelOptionsItemTap: function (event) {
     var optionid = event.currentTarget.dataset.optionid
     this.setData({
-      id: optionid
+      id: optionid,
+      selectSize: this.data.language.select_attribute
     })
     this.getProductDetails()
     //wx.navigateTo({
@@ -506,6 +507,7 @@ Page({
       header: requestHeader,
       data: {
         qty: that.data.buyNumber,
+        buy_now: 1,
         product_id: that.data.goodsDetail._id
       },
       success: function (res) {
@@ -736,20 +738,19 @@ Page({
     var that = this;
     var id = that.data.id
     wx.request({
-      url: app.globalData.urls + '/shop/goods/fav/list',
+      url: app.globalData.urls + '/catalog/product/getfav',
       data: {
         //nameLike: this.data.goodsDetail.basicInfo.name,
-        token: app.globalData.token
+        //token: app.globalData.token
+        product_id: id,
       },
+      header: app.getRequestHeader(),
       success: function (res) {
-        if (res.data.code == 0 && res.data.data.length) {
-          for (var i = 0; i < res.data.data.length; i++) {
-            if (res.data.data[i].goodsId == parseInt(id)) {
-              that.setData({
-                favicon: 1
-              });
-              break;
-            }
+        if (res.data.code == 200) {
+          if (res.data.data.fav == 1) {
+            that.setData({
+              favicon: 1
+            });
           }
         }
       }
@@ -758,13 +759,15 @@ Page({
   fav: function () {
     var that = this;
     wx.request({
-      url: app.globalData.urls + '/shop/goods/fav/add',
+      url: app.globalData.urls + '/catalog/product/favorite',
       data: {
-        goodsId: this.data.goodsDetail.basicInfo.id,
-        token: app.globalData.token
+        product_id: that.data.id,
+        type: 'add',
+        //token: app.globalData.token
       },
+      header: app.getRequestHeader(),
       success: function (res) {
-        if (res.data.code == 0) {
+        if (res.data.code == 200) {
           wx.showToast({
             title: '收藏成功',
             icon: 'success',
@@ -775,19 +778,22 @@ Page({
             favicon: 1
           });
         }
+        app.saveReponseHeader(res);
       }
     })
   },
   del: function () {
     var that = this;
     wx.request({
-      url: app.globalData.urls + '/shop/goods/fav/delete',
+      url: app.globalData.urls + '/catalog/product/favorite',
       data: {
-        goodsId: this.data.goodsDetail.basicInfo.id,
-        token: app.globalData.token
+        product_id: that.data.id,
+        type: 'del',
+        //token: app.globalData.token
       },
+      header: app.getRequestHeader(),
       success: function (res) {
-        if (res.data.code == 0) {
+        if (res.data.code == 200) {
           wx.showToast({
             title: '取消收藏',
             icon: 'success',
@@ -798,6 +804,7 @@ Page({
             favicon: 0
           });
         }
+        app.saveReponseHeader(res);
       }
     })
   },

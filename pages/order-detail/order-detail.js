@@ -3,6 +3,7 @@ Page({
     data:{
       orderId:0,
         goodsList:[],
+        orderStatus: 0,
         yunPrice:"0.00"
     },
     onLoad:function(e){
@@ -22,24 +23,79 @@ Page({
       wx.showLoading();
       setTimeout(function () {
         wx.request({
-          url: app.globalData.urls + '/order/detail',
+          url: app.globalData.urls + '/customer/order/wxview',
+          header: app.getRequestHeader(),
           data: {
             token: app.globalData.token,
-            id: that.data.orderId
+            increment_id: that.data.orderId
           },
           success: (res) => {
             wx.hideLoading();
-            if (res.data.code != 0) {
+            if (res.data.code != 200) {
               wx.showModal({
                 title: '错误',
-                content: res.data.msg,
+                content: '订单信息获取错误',
                 showCancel: false
               })
               return;
             }
+            var order = res.data.data.order;
+            var product_items = order.products
+            var goods = [];
+            if (order.products) {
+              for (var x in product_items) {
+                var product_item = product_items[x]
+                goods.push({
+                  goodsName: product_item.name,
+                  amount: product_item.price,
+                  property: product_item.custom_option_info_str,
+                  number: product_item.qty,
+                  pic: product_item.imgUrl,
+                })
+              }
+            }
+            var statusStr = '';
+            var status = 0;
+            var order_status = order.order_status;
+            if (order_status == 'payment_pending' || order_status == 'payment_processing') {
+              statusStr = '待支付'
+              status = 0
+            } else if (order_status == 'payment_confirmed') {
+              statusStr = '已支付待发货'
+              status = 1
+            } else if (order_status == 'payment_canceled') {
+              statusStr = '已取消'
+              status = -1
+            } else if (order_status == 'dispatched') {
+              statusStr = '已发货待确认'
+              status = 2
+            } else if (order_status == 'completed') {
+              statusStr = '已完成'
+              status = 3
+            } 
+            
+            var orderDetail = {
+              statusStr: order.order_status,
+              trackingNumber: order.tracking_number,
+              trackingCompany: order.tracking_company,
+              linkMan: order.customer_firstname + order.customer_lastname,
+              mobile: order.customer_telephone,
+              address: order.customer_address_street1,
+              goods: goods,
+              symbol: order.currency_symbol,
+              product_amount: order.subtotal,
+              shipping_cost: order.shipping_total,
+              grand_total: order.grand_total,
+              subtotal_with_discount: order.subtotal_with_discount,
+
+            }
+
             that.setData({
-              orderDetail: res.data.data
+              orderDetail: orderDetail,
+              orderStatusStr: statusStr,
+              orderStatus: status,
             });
+            app.saveReponseHeader(res);
           }
         })
         wx.hideLoading();

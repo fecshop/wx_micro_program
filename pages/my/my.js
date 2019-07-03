@@ -9,6 +9,8 @@ Page({
   },
   onLoad: function () {
     var that = this;
+    that.loginAccount()
+    /*
     that.getUserApiInfo();
     that.getUserAmount();
     that.checkScoreSign();
@@ -26,6 +28,31 @@ Page({
         }
       }
     });
+    */
+  },
+  loginAccount: function () {
+    var that = this;
+    wx.showLoading({
+      title: 'loading...',
+    })
+    wx.request({
+      url: app.globalData.urls + '/customer/login/wxindex',
+      header: app.getRequestHeader(),
+      data: {},
+      success: function (res) {
+        wx.hideLoading();
+        app.saveReponseHeader(res);
+        // 如果已经登陆，则跳转page/my/my
+        if (res.data.code != '1100006') {
+          wx.navigateTo({
+            url: "/pages/login/login"
+          })
+        }
+        
+      }
+    });
+
+
   },
   onShow() {
     this.getUserApiInfo();
