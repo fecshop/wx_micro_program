@@ -11,7 +11,7 @@ fecshop微信小程序是基于上面的小程序二次开发而来，后台使�
 
 2.扫码查看
 
-![xxx](wx_xiaochengxu_fecmall.png)
+![xxx](wx_xiaochengxu_fecmall2.png)
 
 
 
