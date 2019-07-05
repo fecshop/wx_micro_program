@@ -1,4 +1,8 @@
 var app = getApp()
+// 语言
+var util = require('../../utils/util.js')
+import event from '../../utils/event'
+
 Page({
   data: {
     currencySymbol: '',
@@ -8,8 +12,14 @@ Page({
       currencySymbol: '',
       allSelect: true,
       noSelect: false,
+      //语言 - begin
+      language: '',
+      //语言 - end
       list: []
     },
+    //语言 - begin
+    language: '',
+    //语言 - end
     delBtnWidth: 120,    //删除按钮宽度单位（rpx）
   },
 
@@ -43,7 +53,45 @@ Page({
     if (app.globalData.iphone == true) { that.setData({ iphone: 'iphone' }) }
     
     that.initEleWidth();
+    // 语言
+    // 设置当前页面的language变量 - 每个页面都要有
+    this.setLanguage();
+    event.on("languageChanged", this, this.changeLanguage); // (2)
+    // 设置当前页面的language Index - 每个页面都要有
+    wx.T.setLocaleByIndex(wx.T.langIndex);
+    // 语言 - 结束
+
     //that.onShow();
+  },
+  // 语言 
+  // 设置language变量（翻译Object）
+  setLanguage() {
+    var lang = wx.T.getLanguage()
+    this.setData({
+      language: lang,
+      selectSize: lang.select_attribute
+    });
+    var goodsList = this.data.goodsList
+    goodsList.language = this.data.language
+    this.setData({
+      goodsList: goodsList
+    });
+    //this.loadCartInfo()
+  },
+  // 语言 
+  // 设置language变量（翻译Object）
+  changeLanguage() {
+    var lang = wx.T.getLanguage()
+    this.setData({
+      language: lang,
+      selectSize: lang.select_attribute
+    });
+    var goodsList = this.data.goodsList
+    goodsList.language = this.data.language
+    this.setData({
+      goodsList: goodsList
+    });
+    this.loadCartInfo()
   },
   loadCartInfo: function(){
     var that = this;
@@ -60,6 +108,7 @@ Page({
           var goodsList = {
             saveHidden: true,
             totalPrice: 0,
+            language: that.data.language,
             currencySymbol: '',
             allSelect: true,
             noSelect: true,
@@ -282,6 +331,7 @@ Page({
         currencySymbol: this.data.currencySymbol,
         allSelect: allSelect,
         noSelect: noSelect,
+        language: this.data.language,
         list: list
       }
     });

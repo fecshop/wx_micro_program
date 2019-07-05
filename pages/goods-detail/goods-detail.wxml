@@ -61,10 +61,10 @@
       </view>
     </view>
     <view class="tab-item {{tabArr.curBdIndex=='1'? 'active' : ''}}">
-      <view class="reputation-none" wx:if="{{!goodsDetail.productReview.coll}}">
-        <image src="../../images/empty_comment.png" /> {language.product_no_review}}
+      <view class="reputation-none" wx:if="{{!goodsDetail.productReview.coll || goodsDetail.productReview.coll.length == 0}}">
+        <image src="../../images/empty_comment.png" /> {{language.product_no_review}}
       </view>
-      <view class="goods-reputa-list" wx:for="{{goodsDetail.productReview.coll}}" wx:key="id">
+      <view class="goods-reputa-list" wx:for="{{goodsDetail.productReview.coll && goodsDetail.productReview.coll.length > 0 }}" wx:key="id">
         
         <view class="goods-reputa-mark">
           <view class="goods-reputa-user">
@@ -181,7 +181,7 @@
       <view class="show-text-info">
         <text>·</text>只是为了给您提供更好的服务</view>
     </view>
-    <button open-type="getUserInfo" bindgetuserinfo="userlogin">允许</button>
+    <button open-type="getUserInfo" >允许</button> <!-- bindgetuserinfo="userlogin" -->
   </view>
 </view>
 

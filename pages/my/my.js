@@ -1,34 +1,47 @@
 const app = getApp()
+// 语言
+var util = require('../../utils/util.js')
+import event from '../../utils/event'
+
 Page({
 	data: {
     balance:0,
     freeze:0,
     score:0,
     score_sign_continuous:0,
+    //语言 - begin
+    language: '',
+    //语言 - end
     tabClass: ["", "", "", "", ""]
   },
+  // 语言 
+  // 设置language变量（翻译Object）
+  setLanguage() {
+    var lang = wx.T.getLanguage()
+    this.setData({
+      language: lang,
+      selectSize: lang.select_attribute
+    });
+    //this.initCartInfo()
+  },
+  changeLanguage() {
+    var lang = wx.T.getLanguage()
+    this.setData({
+      language: lang,
+      selectSize: lang.select_attribute
+    });
+    //this.initCartInfo()
+  },
+
   onLoad: function () {
     var that = this;
-    that.loginAccount()
-    /*
-    that.getUserApiInfo();
-    that.getUserAmount();
-    that.checkScoreSign();
-    that.getInfo();
-    wx.request({
-      url: app.globalData.urls + '/notice/list',
-      data: {
-        type: 'notice'
-      },
-      success: function (res) {
-        if (res.data.code == 0) {
-          that.setData({
-            noticeList: res.data.data
-          });
-        }
-      }
-    });
-    */
+    // 语言
+    // 设置当前页面的language变量 - 每个页面都要有
+    this.setLanguage();
+    event.on("languageChanged", this, this.changeLanguage); // (2)
+    // 设置当前页面的language Index - 每个页面都要有
+    wx.T.setLocaleByIndex(wx.T.langIndex);
+    // 语言 - 结束
   },
   loginAccount: function () {
     var that = this;
@@ -48,66 +61,11 @@ Page({
             url: "/pages/login/login"
           })
         }
-        
       }
     });
-
-
   },
   onShow() {
-    this.getUserApiInfo();
-    this.getUserAmount();
-    this.checkScoreSign();
-    this.getInfo();
-		this.getUserInfo();
-    //更新订单状态
-    var that = this;
-    wx.request({
-      url: app.globalData.urls + '/order/statistics',
-      data: { token: app.globalData.token },
-      success: function (res) {
-        if (res.data.code == 0) {
-          if (res.data.data.count_id_no_pay > 0) {
-            wx.setTabBarBadge({
-              index: 3,
-              text: '' + res.data.data.count_id_no_pay + ''
-            })
-          } else {
-            wx.removeTabBarBadge({
-              index: 3,
-            })
-          }
-          that.setData({
-            noplay: res.data.data.count_id_no_pay,
-            notransfer: res.data.data.count_id_no_transfer,
-            noconfirm: res.data.data.count_id_no_confirm,
-            noreputation: res.data.data.count_id_no_reputation
-          });
-        }
-      }
-    })
-    wx.getStorage({
-      key: 'shopCarInfo',
-      success: function (res) {
-        if (res.data) {
-          that.data.shopCarInfo = res.data
-          if (res.data.shopNum > 0) {
-            wx.setTabBarBadge({
-              index: 2,
-              text: '' + res.data.shopNum + ''
-            })
-          } else {
-            wx.removeTabBarBadge({
-              index: 2,
-            })
-          }
-        } else {
-          wx.removeTabBarBadge({
-            index: 2,
-          })
-        }
-      }
-    })
+    this.loginAccount()
   },	
   getUserApiInfo: function () {
     var that = this;

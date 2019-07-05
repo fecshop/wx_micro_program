@@ -102,6 +102,7 @@ Page({
               wx.navigateBack({
                 delta: 1
               });
+              //that.globalData.uid = res.data.data.uid;
               //wx.navigateTo({
               //  url: "/pages/my/my"
               //})

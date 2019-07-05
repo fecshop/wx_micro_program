@@ -1,8 +1,16 @@
 //index.js
 //获取应用实例
 var app = getApp()
+
+// 语言
+var util = require('../../utils/util.js')
+import event from '../../utils/event'
+
 Page({
   data: {
+    //语言 - begin
+    language: '',
+    //语言 - end
     addressList:[]
   },
 
@@ -33,10 +41,26 @@ Page({
       url: "/pages/address-add/address-add?id=" + e.currentTarget.dataset.id
     })
   },
-  
+  // 语言 
+  // 设置language变量（翻译Object）
+  setLanguage() {
+    var lang = wx.T.getLanguage()
+    this.setData({
+      language: lang,
+      selectSize: lang.select_attribute
+    });
+    this.initShippingAddress()
+  },
   onLoad: function () {
     var that = this;
     if (app.globalData.iphone == true) { that.setData({ iphone: 'iphone' }) }
+    // 语言
+    // 设置当前页面的language变量 - 每个页面都要有
+    this.setLanguage();
+    event.on("languageChanged", this, this.setLanguage); // (2)
+    // 设置当前页面的language Index - 每个页面都要有
+    wx.T.setLocaleByIndex(wx.T.langIndex);
+    // 语言 - 结束
   },
   onShow : function () {
     this.initShippingAddress();

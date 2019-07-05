@@ -1,10 +1,35 @@
 var app = getApp();
+// 语言
+var util = require('../../utils/util.js')
+import event from '../../utils/event'
+
 Page({
     data:{
+      //语言 - begin
+      language: '',
+      //语言 - end
       orderId:0,
-        goodsList:[],
-        orderStatus: 0,
-        yunPrice:"0.00"
+      goodsList:[],
+      orderStatus: 0,
+      yunPrice:"0.00"
+    },
+    // 语言 
+    // 设置language变量（翻译Object）
+    setLanguage() {
+      var lang = wx.T.getLanguage()
+      this.setData({
+        language: lang,
+        selectSize: lang.select_attribute
+      });
+      //this.initCartInfo()
+    },
+    languageChange() {
+      var lang = wx.T.getLanguage()
+      this.setData({
+        language: lang,
+        selectSize: lang.select_attribute
+      });
+      this.onShow()
     },
     onLoad:function(e){
       var that = this;
@@ -13,6 +38,14 @@ Page({
         that.setData({ share: true }); 
       }
       if (app.globalData.iphone == true) { that.setData({ iphone: 'iphone' }) }
+      // 语言
+      // 设置当前页面的language变量 - 每个页面都要有
+      this.setLanguage();
+      event.on("languageChanged", this, this.languageChange); // (2)
+      // 设置当前页面的language Index - 每个页面都要有
+      wx.T.setLocaleByIndex(wx.T.langIndex);
+      // 语言 - 结束
+
       that.data.orderId = orderId;
       that.setData({
         orderId: orderId
@@ -33,8 +66,8 @@ Page({
             wx.hideLoading();
             if (res.data.code != 200) {
               wx.showModal({
-                title: '错误',
-                content: '订单信息获取错误',
+                title: that.data.language.error,  //'错误',
+                content: that.data.language.order_get_info_fail,  //'订单信息获取错误',
                 showCancel: false
               })
               return;
@@ -58,19 +91,19 @@ Page({
             var status = 0;
             var order_status = order.order_status;
             if (order_status == 'payment_pending' || order_status == 'payment_processing') {
-              statusStr = '待支付'
+              statusStr = that.data.language.order_wait_pay //'待支付'
               status = 0
             } else if (order_status == 'payment_confirmed') {
-              statusStr = '已支付待发货'
+              statusStr = that.data.language.order_wait_deliver  //'已支付待发货'
               status = 1
             } else if (order_status == 'payment_canceled') {
-              statusStr = '已取消'
+              statusStr = that.data.language.canceled //'已取消'
               status = -1
             } else if (order_status == 'dispatched') {
-              statusStr = '已发货待确认'
+              statusStr = that.data.language.pending_receipt //'已发货待确认'
               status = 2
             } else if (order_status == 'completed') {
-              statusStr = '已完成'
+              statusStr = that.data.language.order_complete //'已完成'
               status = 3
             } 
             
@@ -123,37 +156,40 @@ Page({
       let orderId = this.data.orderId;
       let formId = e.detail.formId;
       wx.showModal({
-          title: '确认您已收到商品？',
+        title: that.data.language.confirm_receive_product,  //'确认您已收到商品？',
           content: '',
           success: function(res) {
             if (res.confirm) {
               wx.showLoading();
               wx.request({
-                url: app.globalData.urls + '/order/delivery',
+                url: app.globalData.urls + '/customer/order/delivery',
                 data: {
-                  token: app.globalData.token,
                   orderId: orderId
                 },
+                header: app.getRequestHeader(),
                 success: (res) => {
-                  if (res.data.code == 0) {
+                  if (res.data.code == 200) {
                     that.onShow();
                     // 模板消息，提醒用户进行评价
                     let postJsonString = {};
                     postJsonString.keyword1 = { value: that.data.orderDetail.orderInfo.orderNumber, color: '#173177' }
-                    let keywords2 = '您已确认收货，期待您的再次光临！';
-                    if (app.globalData.order_reputation_score) {
-                      keywords2 += '立即好评，系统赠送您' + app.globalData.order_reputation_score +'积分奖励。';
-                    }
+                    let keywords2 = that.data.language.confirm_and_next_come;  //'您已确认收货，期待您的再次光临！';
+                    //if (app.globalData.order_reputation_score) {
+                    //  keywords2 += '立即好评，系统赠送您' + app.globalData.order_reputation_score +'积分奖励。';
+                    //}
                     postJsonString.keyword2 = { value: keywords2, color: '#173177' }
                     app.sendTempleMsgImmediately(app.siteInfo.assessorderkey , formId,
                       '/pages/order-detail/order-detail?id=' + orderId, JSON.stringify(postJsonString));
                   }
+                  app.saveReponseHeader(res);
+                  wx.hideLoading();
                 }
               })
             }
           }
       })
     },
+    /*
     submitReputation: function (e) {
       let that = this;
       let formId = e.detail.formId;
@@ -190,9 +226,9 @@ Page({
             let postJsonString = {};
             postJsonString.keyword1 = { value: that.data.orderDetail.orderInfo.orderNumber, color: '#173177' }
             let keywords2 = '感谢您的评价，期待您的再次光临！';
-            if (app.globalData.order_reputation_score) {
-              keywords2 += app.globalData.order_reputation_score + '积分奖励已发放至您的账户。';
-            }
+            //if (app.globalData.order_reputation_score) {
+            //  keywords2 += app.globalData.order_reputation_score + '积分奖励已发放至您的账户。';
+            //}
             postJsonString.keyword2 = { value: keywords2, color: '#173177' }
             app.sendTempleMsgImmediately(app.siteInfo.successorderkey , formId,
               '/pages/order-detail/order-detail?id=' + that.data.orderId, JSON.stringify(postJsonString));
@@ -200,4 +236,5 @@ Page({
         }
       })
     }
+    */
 })

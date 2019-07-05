@@ -1,7 +1,7 @@
 <template name="no-goods">
   <view class="title-box">
     <image class="box-none" src="../../images/none/cart_empty.png"></image>
-    去添加点什么吧
+    {{language.add_same_product_to_cart}}
   </view>
 </template>
 
@@ -26,17 +26,18 @@
           </view>
         </view>
         <view class="delete-btn" data-index="{{index}}" catchtap="delItem"  data-itemid="{{item.item_id}}">
-          删除
+          
+          {{language.remove}}
         </view>
       </view>
     </view>
   </view>
   <view class="jiesuan-box">
     <view class="left-price">
-      <view class="all-selected  {{allSelect?'active':''}}" bindtap="bindAllSelect">全选</view>
-      <view class="total" hidden="{{noSelect}}">合计：Ұ {{totalPrice}}</view>
+      <view class="all-selected  {{allSelect?'active':''}}" bindtap="bindAllSelect">{{language.select_all}}</view>
+      <view class="total" hidden="{{noSelect}}">{{language.grand_total}} ：{{currencySymbol}} {{totalPrice}}</view>
     </view>
-    <view class="to-pay-btn {{noSelect?'no-select':''}}" hidden="{{!saveHidden}}" bindtap="toPayOrder">下单</view>
-    <view class="to-pay-btn {{noSelect?'no-select':''}}" hidden="{{saveHidden}}" bindtap="deleteSelected">删除</view>
+    <view class="to-pay-btn {{noSelect?'no-select':''}}" hidden="{{!saveHidden}}" bindtap="toPayOrder">{{language.place_order}}</view>
+    <view class="to-pay-btn {{noSelect?'no-select':''}}" hidden="{{saveHidden}}" bindtap="deleteSelected">{{language.remove}}</view>
   </view>
 </template>

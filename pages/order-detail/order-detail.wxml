@@ -1,4 +1,4 @@
-<navigation id='Navigation' show-icon="{{true}}" title="订单详情" show-title="{{true}}" class=""></navigation>
+<navigation id='Navigation' show-icon="{{true}}" title="{{language.order_info}}" show-title="{{true}}" class=""></navigation>
 <view class="container">
   <view class="sec-wrap">
     <view class="order-status">
@@ -20,10 +20,10 @@
         </view>
         <view class="right-text"  data-id="{{orderDetail.increment_id}}" data-number="{{orderDetail.trackingNumber}}">  <!--bindtap="wuliuDetailsTap" -->
           <view class="order-number">
-            快递单号：{{orderDetail.trackingNumber}}
+            {{language.tracking_number}}：{{orderDetail.trackingNumber}}
           </view>
           <view class="order-number">
-            快递单号：{{orderDetail.trackingCompany}}
+            {{language.tracking_company}}：{{orderDetail.trackingCompany}}
           </view>
         </view>
         <!--
@@ -47,8 +47,8 @@
     </block>
   </view>
   <view class="goods-list">
-    <view class="list-title">商品信息</view>
-    <form bindsubmit="submitReputation" report-submit="true">
+    <view class="list-title">{{language.product_info}}</view>
+    <form  report-submit="true">  <!--bindsubmit="submitReputation"  -->
       <block wx:for-items="{{orderDetail.goods}}" wx:key="{{index}}">
         <view class="a-goods">
           <view class="img-box">
@@ -57,7 +57,7 @@
           <view class="text-box">
             <view class="arow arow01">
               <view class="goods-name">{{item.goodsName}}</view>
-              <view class="goods-price">¥ {{item.amount}}</view>
+              <view class="goods-price">{{orderDetail.symbol}} {{item.amount}}</view>
             </view>
             <view class="arow">
               <view class="goods-label">{{item.property}}</view>
@@ -96,7 +96,7 @@
     </form>
     <form bindsubmit="confirmBtnTap" report-submit="true">
       <view class="btn-row" wx:if="{{orderDetail.orderInfo.status==2}}">
-        <button class="confirm-btn" formType="submit">确认收货</button>
+        <button class="confirm-btn" formType="submit">{{language.confirm_receipt}}</button>
       </view>
     </form>
   </view>
@@ -116,19 +116,19 @@
   -->
   <view class="goods-info">
     <view class="row-box">
-      <view class="row-label">商品金额</view>
+      <view class="row-label">{{language.subtotal}}</view>
       <view class="right-text">{{orderDetail.symbol}} {{orderDetail.product_amount}}</view>
     </view>
     <view class="row-box">
-      <view class="row-label">运费</view>
+      <view class="row-label">{{language.shipping_cost}}</view>
       <view class="right-text">+ {{orderDetail.symbol}} {{orderDetail.shipping_cost}}</view>
     </view>
     <view class="row-box">
-      <view class="row-label">优惠券</view>
+      <view class="row-label">{{language.coupon}}</view>
       <view class="right-text">- {{orderDetail.symbol}} {{orderDetail.subtotal_with_discount}}</view>
     </view>
     <view class="row-box">
-      <view class="row-label">应付总额</view>
+      <view class="row-label">{{language.grand_total}}</view>
       <view class="right-text">{{orderDetail.symbol}} {{orderDetail.grand_total}}</view>
     </view>
   </view>

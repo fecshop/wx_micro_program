@@ -1,9 +1,9 @@
-<navigation id='Navigation' show-icon="{{true}}" title="确认订单" show-title="{{true}}" class=""></navigation>
+<navigation id='Navigation' show-icon="{{true}}" title="{{language.confirm_order}}" show-title="{{true}}" class=""></navigation>
 <view class="container">
      <form bindsubmit="createOrder" report-submit="true">
      <view class="address-box" wx:if="{{isNeedLogistics > 0}}">
         <view class="add-address" hidden="{{curAddressData}}">
-            <view class="title" bindtap="addAddress">新增收货地址</view>
+            <view class="title" bindtap="addAddress">{{language.add_new_address}}</view>
         </view>
         <view class="show-address" hidden="{{!curAddressData}}" bindtap="selectAddress">
             <view class="name-tel">{{curAddressData.linkMan}}  {{curAddressData.mobile}}</view>
@@ -11,7 +11,7 @@
         </view>
      </view>
      <view class="goods-list">
-        <view class="list-title">商品列表</view>
+        <view class="list-title">{{language.product_list}}</view>
         <view class="a-goods" wx:for-items="{{goodsList}}" wx:key="{{index}}">
             <view class="img-box">
                 <image src="{{item.pic}}" class="img" />
@@ -27,15 +27,16 @@
                 </view>
             </view>
         </view>
-     </view>
-     <view class="peisong-way">
+      </view>
+      
+      <view class="peisong-way">
         <view class="row-box" wx:if="{{isNeedLogistics > 0}}">
             
             <view class="shipping-container" >
               <view style="display:inline-block"></view>
               <picker style="display:inline-block" bindchange="changeShipping" mode="selector" range="{{shippings}}" value="{{shippingIndex}}" >
                     <view class="picker" style="font-size:28rpx">
-                      配送方式：{{shippings[shippingIndex]}} <!-- (1) -->
+                      {{language.shipping_method}}:{{shippings[shippingIndex]}} <!-- (1) -->
                     </view>
                   </picker>
             </view>
@@ -43,44 +44,41 @@
 
         </view>
         <view class="row-box">
-            <view class="row-label">备注</view>
+            <view class="row-label">{{language.remark}}</view>
             <view class="right-text">
-                <input name="remark" type="text" class="liuyan" placeholder="如需备注请输入" />
+                <input name="remark" type="text" class="liuyan" placeholder="{{language.add_your_remark_info}}" />
             </view>
         </view>
-     </view>
-     <view class="peisong-way" hidden="{{hasNoCoupons}}">
+      </view>
+      <view class="peisong-way" >
         <view class="row-box" style="border-bottom:none;">
-            <view class="row-label">选择使用优惠券</view>
+            <view class="row-label">{{language.use_coupon}}</view>
         </view>
         <view class="row-box" style="border-bottom:none;">
-          <picker-view indicator-style="height: 50rpx;" style="width: 100%; height: 150rpx;" value="0" bindchange="bindChangeCoupon">
-            <picker-view-column>
-              <view style="line-height: 50px">不使用优惠券</view>
-              <view wx:for="{{coupons}}" wx:key="id" style="line-height: 50px">{{item.money}}元 {{item.name}}</view>
-            </picker-view-column>
-          </picker-view>
+          <input bindinput="couponCodeSet" type="text" style="border-bottom:1px solid #ddd" value="{{curCoupon}}" />
+          <button wx:if="{{hasNoCoupons}}" bindtap="addCoupon" style="line-height:60rpx;font-size:30rpx;">{{language.add_coupon}}</button> 
+          <button wx:if="{{!hasNoCoupons}}" bindtap="cancelCoupon" style="line-height:60rpx;font-size:30rpx;">{{language.cancel_coupon}}</button> 
         </view>
      </view>
      <view class="goods-info">
         <view class="row-box" wx:if="{{isNeedLogistics > 0}}">
-            <view class="row-label">商品金额</view>
+            <view class="row-label">{{language.subtotal}}</view>
             <view class="right-text">{{cartSymbol}} {{allGoodsPrice}}</view>
         </view>
         <view class="row-box" >
-            <view class="row-label">运费</view>
+            <view class="row-label">{{language.shipping_cost}}</view>
             <view class="right-text">+ {{cartSymbol}} {{yunPrice}}</view>
         </view>
         <view class="row-box" wx:if="{{!hasNoCoupons}}">
-            <view class="row-label">优惠券</view>
+            <view class="row-label">{{language.coupon}}</view>
             <view class="right-text">- {{cartSymbol}} {{youhuijine}}</view>
         </view>
      </view>
      <view class="jiesuan-box">
         <view class="left-price">
-            <view class="total">合计：{{cartSymbol}} {{grandTotal}}</view>
+            <view class="total">{{language.grand_total}}：{{cartSymbol}} {{grandTotal}}</view>
         </view>
-        <button class="to-pay-btn" formType="submit">提交订单</button>
+        <button class="to-pay-btn" formType="submit">{{language.place_new_order}}</button>
     </view>
     </form>
 </view>

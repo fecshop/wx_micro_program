@@ -36,6 +36,9 @@ Page({
 		})
 	},
 	goSearch:function(e){
+    this.setData({
+      searchE:e
+    });
 		this.search(e)
 	},
   setLanguage() {
@@ -43,7 +46,16 @@ Page({
       language: wx.T.getLanguage()
     });
   },
+  changeLanguage() {
+    this.setData({
+      language: wx.T.getLanguage()
+    });
+    this.search()
+  },
 	search: function(e) {
+    if (!e) {
+      var e = this.data.searchE
+    }
 		let that = this
 		let keywords;
     that.setData({
@@ -135,7 +147,13 @@ Page({
 	 * 生命周期函数--监听页面加载
 	 */
 	onLoad: function(options) {
-    this.setLanguage()
+    // 语言
+    // 设置当前页面的language变量 - 每个页面都要有
+    this.setLanguage();
+    event.on("languageChanged", this, this.changeLanguage); // (2)
+    // 设置当前页面的language Index - 每个页面都要有
+    wx.T.setLocaleByIndex(wx.T.langIndex);
+    // 语言 - 结束
 	},
 
 	/**

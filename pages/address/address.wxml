@@ -1,4 +1,4 @@
-<navigation id='Navigation' show-icon="{{true}}" title="地址管理" show-title="{{true}}" class=""></navigation>
+<navigation id='Navigation' show-icon="{{true}}" title="{{language.address_manager}}" show-title="{{true}}" class=""></navigation>
 <view class="container">
   <view class="address-list">
     <view class="a-address" wx:for-items="{{addressList}}" wx:key="{{index}}">
@@ -15,11 +15,11 @@
   </view>
   <view hidden="{{loadingMoreHidden ? true : false}}" class="no-more-goods">
     <image src="/images/address_empty.png" class="no-order-img"></image>
-    <view class="text">还没有添加地址呢</view>
+    <view class="text">{{language.no_address}}</view>
   </view>
   <view class="bottom-box" bindtap="addAddess">
     <image src="../../images/address_add.png"></image>
-    新增地址
+    {{language.add_new_address}}
   </view>
 
 </view>

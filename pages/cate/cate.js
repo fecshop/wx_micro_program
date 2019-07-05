@@ -32,6 +32,12 @@ Page({
     this.setData({
       language: wx.T.getLanguage()
     });
+    //this.initCategory();
+  },
+  changeLanguage() {
+    this.setData({
+      language: wx.T.getLanguage()
+    });
     this.initCategory();
   },
   tabClick: function (e) {
@@ -97,7 +103,7 @@ Page({
     // 语言
     // 设置当前页面的language变量 - 每个页面都要有
     this.setLanguage();
-    event.on("languageChanged", this, this.setLanguage); // (2)
+    event.on("languageChanged", this, this.changeLanguage); // (2)
     // 设置当前页面的language Index - 每个页面都要有
     wx.T.setLocaleByIndex(wx.T.langIndex);
     // 语言 - 结束
@@ -111,24 +117,7 @@ Page({
         }
       }
     })
-    
-    
-    /**
-     * wx.request({
-      url: app.globalData.urls + '/banner/list',
-      data: {
-        key: 'mallName',
-        type: 'goods'
-      },
-      success: function (res) {
-        if (res.data.code == 0) {
-          that.setData({
-            banners: res.data.data
-          });
-        }
-      }
-    }),
-     */
+    this.initCategory();
   },
   initCategory: function () {
     var that = this
@@ -148,9 +137,8 @@ Page({
             banners: banners,
             activeCategoryId: 0
           });
-        }//
+        }
         app.saveReponseHeader(res);
-        //that.getGoodsList(0);
       }
     })
   },
@@ -177,7 +165,6 @@ Page({
 
   },
   toDetailsTap: function (e){
-    //console.log("/pages/goods-detail/goods-detail?id=" + e.currentTarget.dataset.id)
     wx.navigateTo({
       url: "/pages/goods-detail/goods-detail?id=" + e.currentTarget.dataset.id
     })
@@ -188,49 +175,6 @@ Page({
   },
   onShow: function () {
     var that = this;
-    /*
-    wx.getStorage({
-      key: 'shopCarInfo',
-      success: function (res) {
-        if (res.data) {
-          that.data.shopCarInfo = res.data
-          if (res.data.shopNum > 0) {
-            wx.setTabBarBadge({
-              index: 2,
-              text: '' + res.data.shopNum + ''
-            })
-          } else {
-            wx.removeTabBarBadge({
-              index: 2,
-            })
-          }
-        } else {
-          wx.removeTabBarBadge({
-            index: 2,
-          })
-        }
-      }
-    })
-    wx.request({
-      url: app.globalData.urls + '/order/statistics',
-      data: { token: app.globalData.token },
-      header: app.getRequestHeader(),
-      success: function (res) {
-        if (res.data.code == 0) {
-          if (res.data.data.count_id_no_pay > 0) {
-            wx.setTabBarBadge({
-              index: 3,
-              text: '' + res.data.data.count_id_no_pay + ''
-            })
-          } else {
-            wx.removeTabBarBadge({
-              index: 3,
-            })
-          }
-        }
-      }
-    })
-    */
   },
 
 })

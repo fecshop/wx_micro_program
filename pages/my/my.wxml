@@ -18,28 +18,28 @@
   </view>
   <view class="userinfo-item">
     <image src="../../images/profile_dfunding.png"></image>
-    <navigator url="/pages/order-list/order-list" hover-class="none">我的订单</navigator>
+    <navigator url="/pages/order-list/order-list" hover-class="none">{{language.my_order}}</navigator>
   </view>
   <view class="user-cart-list">
     <navigator hover-class="none" class="cart-list" url="/pages/order-list/order-list?currentType=1">
       <view wx:if="{{noplay}}" class="red-dot">{{noplay}}</view>
       <image src="../../images/order-details/orderform_pay.png"></image>
-      待付款
+      {{language.wait_pay}}
     </navigator>
     <navigator hover-class="none" class="cart-list" url="/pages/order-list/order-list?currentType=2">
       <view wx:if="{{notransfer}}" class="red-dot">{{notransfer}}</view>
       <image src="../../images/order-details/orderform_ship.png"></image>
-      待发货
+      {{language.wait_deliver}}
     </navigator>
     <navigator hover-class="none" class="cart-list" url="/pages/order-list/order-list?currentType=3">
       <view wx:if="{{noconfirm}}" class="red-dot">{{noconfirm}}</view>
       <image src="../../images/order-details/delivering.png"></image>
-      待收货
+      {{language.pending_receipt}}
     </navigator>
     <navigator hover-class="none" class="cart-list" url="/pages/order-list/order-list?currentType=4">
       <view wx:if="{{noreputation}}" class="red-dot">{{noreputation}}</view>
       <image src="../../images/order-details/orderform.png"></image>
-      已完成
+      {{language.order_complete}}
     </navigator>
   </view>
   <view class="userinfo-item-box">
@@ -61,15 +61,15 @@
     -->
     <navigator hover-class="none" class="userinfo-item" url="/pages/fav-list/fav-list">
       <image src="../../images/profile_collection.png"></image>
-      <view>我的收藏</view>
+      <view>{{language.my_favorite}}</view>
     </navigator>
     <navigator hover-class="none" class="userinfo-item" url="/pages/address/address">
       <image src="../../images/profile_address.png"></image>
-      <view>我的地址</view>
+      <view>{{language.my_address}}</view>
     </navigator>
     <view class="userinfo-item">
       <image src="../../images/profile_service.png"></image>
-      <view>联系客服</view>
+      <view>{{language.my_service}}</view>
       <button open-type="contact" session-from="weapp"></button>
     </view>
   </view>

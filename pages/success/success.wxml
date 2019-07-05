@@ -1,14 +1,15 @@
-<navigation id='Navigation' show-icon="{{true}}" title="确认付款" show-title="{{true}}" class=""></navigation>
+<navigation id='Navigation' show-icon="{{true}}" title="{{language.confirm_payment}}" show-title="{{true}}" class=""></navigation>
 <view class="container">
   <view class="order-box">
     <image src="../../images/profile_tegral.png" />
     <view class="order-info">
-      <view class="order-money">商品总额：
+      <view class="order-money">{{language.product_total}}
         <text>{{symbol}} {{money}}</text>
       </view>
-      <view class="order-number">订单号：{{order}}</view>
+      <view class="order-number">{{language.order_no}}：{{order}}</view>
     </view>
   </view>
+  <!--
   <view class="adds-box">
     <image src="../../images/profile_address.png" />
     <view class="adds-info">
@@ -16,5 +17,6 @@
       <view class="addr-text">{{curAddressData.address}}</view>
     </view>
   </view>
-  <view class="pay-btn" bindtap="toPayTap" data-id="{{order}}" data-money="{{money}}">微信支付 {{symbol}}{{money}}</view>
+  -->
+  <view class="pay-btn" bindtap="toPayTap" data-id="{{order}}" data-money="{{money}}">{{language.wxpay}} {{symbol}}{{money}}</view>
 </view>

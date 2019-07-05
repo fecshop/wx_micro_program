@@ -1,5 +1,5 @@
 <!--pages/cart/cart.wxml-->
-<navigation id='Navigation' show-title='{{true}}' title="购物车"></navigation>
+<navigation id='Navigation' show-title='{{true}}' title="{{language.cart}}"></navigation>
 <import src="../template-cart/template-cart.wxml" />
 <view class="container">
   <!-- <view class="header-container">

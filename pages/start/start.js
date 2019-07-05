@@ -45,6 +45,12 @@ Page({
     this.setData({
       language: wx.T.getLanguage()
     });
+    //this.initStart();
+  },
+  changeLanguage() {
+    this.setData({
+      language: wx.T.getLanguage()
+    });
     this.initStart();
   },
   tapBanner: function (e) {
@@ -65,7 +71,7 @@ Page({
     // 语言
     // 设置当前页面的language变量 - 每个页面都要有
     this.setLanguage();
-    event.on("languageChanged", this, this.setLanguage); // (2)
+    event.on("languageChanged", this, this.changeLanguage); // (2)
     // 设置当前页面的language Index - 每个页面都要有
     wx.T.setLocaleByIndex(wx.T.langIndex);
     // 语言 - 结束

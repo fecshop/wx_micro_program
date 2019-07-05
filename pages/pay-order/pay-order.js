@@ -1,6 +1,9 @@
 //index.js
 //获取应用实例
 var app = getApp()
+// 语言
+var util = require('../../utils/util.js')
+import event from '../../utils/event'
 
 Page({
   data: {
@@ -16,9 +19,11 @@ Page({
     shipping_method: '',
     shippingIndex: 0,
     orderType: "", //订单类型，购物车下单或立即支付下单，默认是购物车，
+    //语言 - begin
+    language: '',
+    //语言 - end
 
     hasNoCoupons: true,
-    coupons: [],
     youhuijine: 0, //优惠券金额
     curCoupon: null // 当前选择使用的优惠券
   },
@@ -27,32 +32,27 @@ Page({
     var that = this;
     var shopList = [];
     
-    /*
-    //立即购买下单
-    if ("buyNow" == that.data.orderType) {
-      var buyNowInfoMem = wx.getStorageSync('buyNowInfo');
-      if (buyNowInfoMem && buyNowInfoMem.shopList) {
-        shopList = buyNowInfoMem.shopList
-      }
-    } else {
-      //购物车下单
-      var shopCarInfoMem = wx.getStorageSync('shopCarInfo');
-      if (shopCarInfoMem && shopCarInfoMem.shopList) {
-        // shopList = shopCarInfoMem.shopList
-        shopList = shopCarInfoMem.shopList.filter(entity => {
-          return entity.active;
-        });
-      }
-    }
-    */
-    
-    //that.setData({
-    //  goodsList: shopList,
-    //});
-    
     that.initCartInfo()
-    // that.initShippingAddress();
   },
+  // 语言 
+  // 设置language变量（翻译Object）
+  setLanguage() {
+    var lang = wx.T.getLanguage()
+    this.setData({
+      language: lang,
+      selectSize: lang.select_attribute
+    });
+    //this.initCartInfo()
+  },
+  changeLanguage() {
+    var lang = wx.T.getLanguage()
+    this.setData({
+      language: lang,
+      selectSize: lang.select_attribute
+    });
+    this.initCartInfo()
+  },
+
 
   onLoad: function (e) {
     //console.log(e)
@@ -63,7 +63,15 @@ Page({
       isNeedLogistics: 1,
       //orderType: e.orderType
     });
+    // 语言
+    // 设置当前页面的language变量 - 每个页面都要有
+    this.setLanguage();
+    event.on("languageChanged", this, this.changeLanguage); // (2)
+    // 设置当前页面的language Index - 每个页面都要有
+    wx.T.setLocaleByIndex(wx.T.langIndex);
+    // 语言 - 结束
     that.loginAccount()
+    //that.initCartInfo()
   },
   loginAccount: function () {
     var that = this;
@@ -100,10 +108,12 @@ Page({
       success: function (res) {
         if (res.data.code == '200') {
           var resAddress = res.data.data.cart_address
-          var curAddressData = {
-            address: resAddress.street1,
-            linkMan: resAddress.first_name + resAddress.last_name,
-            mobile: resAddress.telephone,
+          if (resAddress.street1 && resAddress.telephone) {
+            var curAddressData = {
+              address: resAddress.street1,
+              linkMan: resAddress.first_name + resAddress.last_name,
+              mobile: resAddress.telephone,
+            }
           }
           
           var goodsList = [];
@@ -157,8 +167,19 @@ Page({
               se++;
             }
           }
+          var hasNoCoupons = true
+          var youhuijine = 0
+          var curCoupon = ''
+          if (cart_info.coupon_code) {
+            hasNoCoupons = false;
+            youhuijine = cart_info.coupon_cost
+            curCoupon = cart_info.coupon_code
+          }
           console.log(shippings)
           that.setData({
+            hasNoCoupons: hasNoCoupons,
+            youhuijine: youhuijine, //优惠券金额
+            curCoupon: curCoupon, // 当前选择使用的优惠券
             shipping_method: shipping_method,
             allGoodsPrice: res.data.data.cart_info.product_total,
             shippingMethods: shippingMethods,
@@ -183,7 +204,89 @@ Page({
 
   },
 
-  // 语言 
+  
+  couponCodeSet: function(event) {
+    this.setData({
+      curCoupon: event.detail.value
+    })
+  },
+
+  
+  cancelCoupon: function() {
+    var that = this
+    var coupon_code = that.data.curCoupon
+    if (coupon_code == "") {
+      wx.showModal({
+        title: that.data.language.warning, //'友情提示',
+        content: that.data.language.please_fill_your_coupon, //'请先您的优惠券码',
+        showCancel: false
+      })
+      return;
+    }
+    wx.showLoading();
+    wx.request({
+      url: app.globalData.urls + '/checkout/cart/cancelcoupon',
+      data: {
+        // key: 'shopcart'
+        coupon_code: coupon_code
+      },
+      header: app.getPostRequestHeader(),
+      method: 'POST',
+      success: function (res) {
+        if (res.data.code == '200') {
+
+        } else {  // 优惠券过期
+          wx.showModal({
+            title: that.data.language.warning, //'友情提示',
+            content: that.data.language.cancel_coupon_fail, //'',
+            showCancel: false
+          })
+        }
+        app.saveReponseHeader(res);
+        wx.hideLoading();
+        that.initCartInfo()
+      }
+    })
+  },
+
+  addCoupon: function(){
+    var that = this
+    var coupon_code = that.data.curCoupon
+    if (coupon_code == "") {
+      wx.showModal({
+        title: that.data.language.warning, //'友情提示',
+        content: that.data.language.please_fill_your_coupon, //'请先您的优惠券码',
+        showCancel: false
+      })
+      return;
+    }
+    wx.showLoading();
+    wx.request({
+      url: app.globalData.urls + '/checkout/cart/addcoupon',
+      data: {
+        // key: 'shopcart'
+        coupon_code: coupon_code
+      },
+      header: app.getPostRequestHeader(),
+      method: 'POST',
+      success: function (res) {
+        if (res.data.code == '200') {
+          
+        } else {  // 优惠券过期
+          wx.showModal({
+            title: that.data.language.warning, //'友情提示',
+            content: that.data.language.add_coupon_fail, //'添加优惠券失败',
+            showCancel: false
+          })
+        }
+        app.saveReponseHeader(res);
+        wx.hideLoading();
+        that.initCartInfo()
+      }
+    })
+  },
+
+  // 
   changeShipping(e) {
     var that = this
     let index = e.detail.value;
@@ -261,8 +364,14 @@ Page({
       success: (res) => {
 				// console.log(postData)
         wx.hideLoading();
-
-        if (res.data.code != 200) {
+        if (res.data.code == 1500002) {
+          wx.showModal({
+            title: '错误',
+            content: res.data.data.error,
+            showCancel: false
+          })
+          return;
+        } else if (res.data.code != 200) {
           wx.showModal({
             title: '错误',
             content: '订单生成失败',
@@ -346,6 +455,7 @@ Page({
     });
     that.createOrder();
   },
+  */
   addAddress: function () {
     wx.navigateTo({
       url: "/pages/address-add/address-add"
@@ -356,7 +466,7 @@ Page({
       url: "/pages/address/address"
     })
   },
-  */
+  
   /*
   getMyCoupons: function () {
     var that = this;
@@ -382,6 +492,7 @@ Page({
     })
   },
   */
+  /*
   bindChangeCoupon: function (e) {
     const selIndex = e.detail.value[0] - 1;
     if (selIndex == -1) {
@@ -397,4 +508,5 @@ Page({
       curCoupon: this.data.coupons[selIndex]
     });
   }
+  */
 })
