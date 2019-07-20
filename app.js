@@ -208,10 +208,17 @@ App({
     var fecshop_data = {};
     var request_header = request.header;
     var header_fecshop_uuid = request_header['Fecshop-Uuid'];
+    if (!header_fecshop_uuid) {
+      header_fecshop_uuid = request_header['fecshop-uuid'];
+    }
     var header_access_token = request_header['Access-Token'];
+    if (!header_access_token) {
+      header_access_token = request_header['access-token'];
+    }
     
-    //console.log("eeeeeeeeeeeee");
-    //console.log(header_fecshop_uuid);
+    console.log("#################");
+    console.log(header_fecshop_uuid);
+    console.log(header_access_token);
     if (header_fecshop_uuid && (header_fecshop_uuid != fecshop_uuid)) {
       wx.setStorageSync('fecshop-uuid', header_fecshop_uuid);
     }
