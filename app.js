@@ -216,9 +216,6 @@ App({
       header_access_token = request_header['access-token'];
     }
     
-    console.log("#################");
-    console.log(header_fecshop_uuid);
-    console.log(header_access_token);
     if (header_fecshop_uuid && (header_fecshop_uuid != fecshop_uuid)) {
       wx.setStorageSync('fecshop-uuid', header_fecshop_uuid);
     }
