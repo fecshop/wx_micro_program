@@ -212,75 +212,78 @@ Page({
     wx.showLoading({
       title: 'loading...',
     })
-    wx.request({
-      url: app.globalData.urls + "/customer/login/bindaccount",  // "/user/wxapp/login",
-      header: app.getPostRequestHeader(),
-      method: 'POST',
-      data: {
-        email: email,
-        password: password,
-        isBindNew: isBindNew,
-      },
+
+    wx.login({
       success: function (res) {
-        wx.hideLoading();
-        app.saveReponseHeader(res);
-        if (res.data.code == '1100026') {  // 无法通过微信api获取信息
-          wx.showModal({
-            title: "提示",
-            content: "无法从Session中获取微信Openid，请重新绑定",
-            showCancel: false
-          });
-          that.wxLogin()
-          return;
-        } else if (res.data.code == '1100027') { // 登陆成功，进行跳转
-          wx.showModal({
-            title: "提示",
-            content: "您已经有绑定的账户",
-            showCancel: false
-          });
-          return;
-        } else if (res.data.code == '1100007') { // 没有相关用户，需要绑定
-          wx.showModal({
-            title: "提示",
-            content: "注册账户失败: " + res.data.data.errors,
-            showCancel: false
-          });
+        wx.request({
+          url: app.globalData.urls + "/customer/login/bindaccount",  // "/user/wxapp/login",
+          header: app.getPostRequestHeader(),
+          method: 'POST',
+          data: {
+            email: email,
+            password: password,
+            isBindNew: isBindNew,
+            code: res.code
+          },
+          success: function (res) {
+            wx.hideLoading();
+            app.saveReponseHeader(res);
+            if (res.data.code == '1100026') {  // 无法通过微信api获取信息
+              wx.showModal({
+                title: "提示",
+                content: "无法从Session中获取微信Openid，请重新绑定",
+                showCancel: false
+              });
+              that.wxLogin()
+              return;
+            } else if (res.data.code == '1100027') { // 登陆成功，进行跳转
+              wx.showModal({
+                title: "提示",
+                content: "您已经有绑定的账户",
+                showCancel: false
+              });
+              return;
+            } else if (res.data.code == '1100007') { // 没有相关用户，需要绑定
+              wx.showModal({
+                title: "提示",
+                content: "注册账户失败: " + res.data.data.errors,
+                showCancel: false
+              });
 
-        } else if (res.data.code == '1100029') { // 没有相关用户，需要绑定
-          wx.showModal({
-            title: "提示",
-            content: "该邮箱已经存在，请点击`已有账户`，输入邮箱密码进行账户绑定",
-            showCancel: false
-          });
+            } else if (res.data.code == '1100029') { // 没有相关用户，需要绑定
+              wx.showModal({
+                title: "提示",
+                content: "该邮箱已经存在，请点击`已有账户`，输入邮箱密码进行账户绑定",
+                showCancel: false
+              });
 
 
-        } else if (res.data.code == '1100028') { // 没有相关用户，需要绑定
-          wx.showModal({
-            title: "提示",
-            content: "用户的账户密码不正确，请重新输入",
-            showCancel: false
-          });
-        } else if (res.data.code == '200') { // 没有相关用户，需要绑定
-          //wx.navigateTo({
-          //  url: "/pages/my/my"
-          //})
-          wx.navigateBack({
-            delta: 1
-          });
-        } else {
-          wx.showModal({
-            title: "提示",
-            content: "绑定失败，请重新绑定",
-            showCancel: false
-          });
-          that.wxLogin()
+            } else if (res.data.code == '1100028') { // 没有相关用户，需要绑定
+              wx.showModal({
+                title: "提示",
+                content: "用户的账户密码不正确，请重新输入",
+                showCancel: false
+              });
+            } else if (res.data.code == '200') { // 没有相关用户，需要绑定
+              //wx.navigateTo({
+              //  url: "/pages/my/my"
+              //})
+              wx.navigateBack({
+                delta: 1
+              });
+            } else {
+              wx.showModal({
+                title: "提示",
+                content: "绑定失败，请重新绑定",
+                showCancel: false
+              });
+              that.wxLogin()
 
-        }
+            }
 
+          }
+        });
       }
     });
-
-
   }
-  
 })

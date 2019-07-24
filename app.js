@@ -156,13 +156,13 @@ App({
     var headers = {};
     // 从数据fecshop-data中取出来值
     console.log(headers);
-    var fecshop_uuid = wx.getStorageSync('fecshop-uuid');
+    //var fecshop_uuid = wx.getStorageSync('fecshop-uuid');
     var fecshop_lang = wx.getStorageSync('fecshop-lang');
     var fecshop_currency = wx.getStorageSync('fecshop-currency');
     var fecshop_access_token = wx.getStorageSync('access-token');
-    if (fecshop_uuid) {
-      headers['fecshop-uuid'] = fecshop_uuid;
-    }
+    //if (fecshop_uuid) {
+    //  headers['fecshop-uuid'] = fecshop_uuid;
+    //}
     if (fecshop_lang) {
       headers['fecshop-lang'] = fecshop_lang;
     }
@@ -179,13 +179,13 @@ App({
   getPostRequestHeader: function () {
     var headers = {};
     // 从数据fecshop-data中取出来值
-    var fecshop_uuid = wx.getStorageSync('fecshop-uuid');
+    //var fecshop_uuid = wx.getStorageSync('fecshop-uuid');
     var fecshop_lang = wx.getStorageSync('fecshop-lang');
     var fecshop_currency = wx.getStorageSync('fecshop-currency');
     var fecshop_access_token = wx.getStorageSync('access-token');
-    if (fecshop_uuid) {
-      headers['fecshop-uuid'] = fecshop_uuid;
-    }
+    //if (fecshop_uuid) {
+    //  headers['fecshop-uuid'] = fecshop_uuid;
+    //}
     if (fecshop_lang) {
       headers['fecshop-lang'] = fecshop_lang;
     }
@@ -202,25 +202,42 @@ App({
   },
   saveReponseHeader: function (request){
 
-    var fecshop_uuid = wx.getStorageSync('fecshop-uuid');
+    //var fecshop_uuid = wx.getStorageSync('fecshop-uuid');
     var fecshop_access_token = wx.getStorageSync('access-token');
+    var fecshop_lang = wx.getStorageSync('fecshop-lang');
+    var fecshop_currency = wx.getStorageSync('fecshop-currency');
 
-    var fecshop_data = {};
     var request_header = request.header;
-    var header_fecshop_uuid = request_header['Fecshop-Uuid'];
-    if (!header_fecshop_uuid) {
-      header_fecshop_uuid = request_header['fecshop-uuid'];
-    }
+
+    //var header_fecshop_uuid = request_header['Fecshop-Uuid'];
+    //if (!header_fecshop_uuid) {
+    //  header_fecshop_uuid = request_header['fecshop-uuid'];
+    //}
     var header_access_token = request_header['Access-Token'];
     if (!header_access_token) {
       header_access_token = request_header['access-token'];
     }
-    
-    if (header_fecshop_uuid && (header_fecshop_uuid != fecshop_uuid)) {
-      wx.setStorageSync('fecshop-uuid', header_fecshop_uuid);
+
+    var header_fecshop_lang = request_header['Fecshop-Lang'];
+    if (!header_fecshop_lang) {
+      header_fecshop_lang = request_header['fecshop-lang'];
     }
+    var header_fecshop_currency = request_header['Fecshop-Currency'];
+    if (!header_fecshop_currency) {
+      header_fecshop_currency = request_header['fecshop-currency'];
+    }
+    
+    //if (header_fecshop_uuid && (header_fecshop_uuid != fecshop_uuid)) {
+    //  wx.setStorageSync('fecshop-uuid', header_fecshop_uuid);
+    //}
     if (header_access_token && (header_access_token != fecshop_access_token)) {
       wx.setStorageSync('access-token', header_access_token);
+    }
+    if (header_fecshop_lang && (header_fecshop_lang != fecshop_lang)) {
+      wx.setStorageSync('fecshop-lang', header_fecshop_lang);
+    }
+    if (header_fecshop_currency && (header_fecshop_currency != fecshop_currency)) {
+      wx.setStorageSync('fecshop-currency', header_fecshop_currency);
     }
     
   },

@@ -357,6 +357,10 @@ Page({
             duration: 2000
           });
           that.closePopupTap();
+        } else if (res.data.code == 1100003) {
+          wx.navigateTo({
+            url: "/pages/login/login"
+          })
         } else {
           wx.showModal({
             title: '错误',
