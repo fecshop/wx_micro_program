@@ -331,10 +331,10 @@ picker {
 
 .tab-header {
   width: 100%;
-  padding-top: 10px;
   background-color: #fff;
   margin: 0 auto;
   margin-bottom: 10px;
+  font-size:0;
 }
 
 .tab-header view {
@@ -344,8 +344,10 @@ picker {
   font-size: 30rpx;
   color: #999;
   height: 30px;
-  padding-bottom: 5px;
-  border-bottom: 1px solid #f5f5f5;
+  line-height: 30px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #f5f5f5;
 }
 
 .tab-header .active {

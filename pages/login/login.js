@@ -140,6 +140,9 @@ Page({
 
   tabFun: function (e) {
     var _datasetId = e.target.dataset.id;
+    if(!_datasetId){
+      return
+    }
     var _obj = {};
     _obj.curHdIndex = _datasetId;
     _obj.curBdIndex = _datasetId;
