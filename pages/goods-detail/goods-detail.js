@@ -144,10 +144,19 @@ Page({
         product_id: that.data.id
       },
       success: function (res) {
-        console.log(res)
+        // console.log(res)
         var selectSizeTemp = "";
         var goodsDetail = res.data.data.product;
         if (!goodsDetail) {
+          wx.showModal({
+            title: that.data.language.error,
+            content: res.data.message,
+            showCancel: false,
+            success(res){
+              // 返回上一层
+              wx.navigateBack()
+            }
+          })
           return
         }
         var is_custom_option_empty = true;
@@ -158,23 +167,21 @@ Page({
           }
         }
         
-        if (!is_custom_option_empty || goodsDetail.options.length != 0
-) {
+        if (!is_custom_option_empty || goodsDetail.options.length != 0) {
           for (var i = 0; i < goodsDetail.options.length; i++) {
             selectSizeTemp = selectSizeTemp + " " + goodsDetail.options[i].label;
           }
           that.setData({
             hasMoreSelect: true,
             selectSize: that.data.selectSize + selectSizeTemp,
-            selectSizePrice: res.data.data.product.price_info.special_price,
+            // selectSizePrice: res.data.data.product.price_info.special_price, // 该设定与下6行重复
             selectptPrice: res.data.data.product.price_info.price
           });
         }
         
         that.setData({
           goodsDetail: res.data.data.product,
-          selectSizePrice: res.data.data.product.price_info.special_price
-,
+          selectSizePrice: res.data.data.product.price_info.special_price ? res.data.data.product.price_info.special_price:0,
           buyNumber: 1,  //(res.data.data.basicInfo.stores > 0) ? 1 : 0,
         });
         WxParse.wxParse('article', 'html', res.data.data.product.description, that, 5);
@@ -316,8 +323,8 @@ Page({
     var that = this
     if (that.data.buyNumber < 1) {
       wx.showModal({
-        title: '提示',
-        content: '购买数量不能为0！',
+        title: that.data.language.tips,
+        content: that.data.language.buy_amount_min + "1" + that.data.language.item,
         showCancel: false
       })
       return;
@@ -363,8 +370,8 @@ Page({
           })
         } else {
           wx.showModal({
-            title: '错误',
-            content: '加入购物车失败',
+            title: that.data.language.error,
+            content: that.data.language.add_to_cart_fail,
             showCancel: false
           })
         }
@@ -378,8 +385,8 @@ Page({
     var that = this
     if (that.data.buyNumber < 1) {
       wx.showModal({
-        title: '提示',
-        content: '购买数量不能为0！',
+        title: that.data.language.tips,
+        content: that.data.language.buy_amount_min + "1" + that.data.language.item,
         showCancel: false
       })
       return;
@@ -415,7 +422,7 @@ Page({
           app.getShopCartNum()
           //that.bindGuiGeTap();
           wx.showToast({
-            title: '加入购物车成功',
+            title: that.data.language.add_to_cart_success,
             icon: 'success',
             duration: 2000
           });
@@ -423,10 +430,14 @@ Page({
           wx.navigateTo({
             url: "/pages/pay-order/pay-order?orderType=buyPT"
           })
+        } else if (res.data.code == 1100003) {
+          wx.navigateTo({
+            url: "/pages/login/login"
+          })
         } else {
           wx.showModal({
-            title: '错误',
-            content: '加入购物车失败',
+            title: that.data.language.error,
+            content: that.data.language.add_to_cart_fail,
             showCancel: false
           })
         }
@@ -550,7 +561,7 @@ Page({
           })
           */
           wx.showToast({
-            title: '收藏成功',
+            title: that.data.language.add_to_collection_success,
             duration: 2000
           })
           that.setData({
@@ -587,7 +598,7 @@ Page({
           })
           */
           wx.showToast({
-            title: '取消收藏',
+            title: that.data.language.remove_for_collection_success,
             duration: 2000
           })
 
@@ -638,7 +649,7 @@ Page({
   getcode: function () {
     var that = this;
     wx.showLoading({
-      title: '生成中...',
+      title: that.data.language.generating,
     })
     var product_id = that.data.goodsDetail._id
     wx.request({
@@ -671,7 +682,7 @@ Page({
       filePath: that.data.codeimg,
       success(res) {
         wx.showToast({
-          title: '保存成功',
+          title: that.data.language.save_success,
           icon: 'success',
           duration: 2000
         })

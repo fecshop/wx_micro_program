@@ -12,7 +12,8 @@ Page({
     //语言 - begin
     language: '',
     //语言 - end
-    tabClass: ["", "", "", "", ""]
+    tabClass: ["", "", "", "", ""],
+    logged:true,
   },
   // 语言 
   // 设置language变量（翻译Object）
@@ -43,10 +44,10 @@ Page({
     wx.T.setLocaleByIndex(wx.T.langIndex);
     // 语言 - 结束
   },
-  loginAccount: function () {
+  loginAccount: function (jumpLogin) {
     var that = this;
     wx.showLoading({
-      title: 'loading...',
+      title: that.data.language.load_user_information,
     })
     wx.request({
       url: app.globalData.urls + '/customer/login/wxindex',
@@ -57,15 +58,28 @@ Page({
         app.saveReponseHeader(res);
         // 如果已经登陆，则跳转page/my/my
         if (res.data.code != '1100006') {
-          wx.navigateTo({
-            url: "/pages/login/login"
+          that.setData({
+            logged: false
+          })
+          if (jumpLogin){
+            wx.navigateTo({
+              url: "/pages/login/login"
+            })
+          }
+        }else{
+          that.setData({
+            logged: true
           })
         }
       }
     });
   },
+  onReady(){
+    // 发起登录验证
+    this.loginAccount(true)
+  },
   onShow() {
-    this.loginAccount()
+    this.loginAccount(false)
   },	
   getUserApiInfo: function () {
     var that = this;

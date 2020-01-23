@@ -65,7 +65,7 @@ export default {
     "address_manager": "地址管理",
     "no_address": "还没有添加地址呢",
 
-    "add_new_address": "新增地址",
+    // "add_new_address": "新增地址",
     "address_name": "联系人",
     "address_person_name": "姓名",
     "mobile": "手机号码",
@@ -97,7 +97,7 @@ export default {
     "order_list": "订单列表",
     "no_order": "还没有订单呢",
     "order_create_datetime": "下单时间",
-    "order_no": "订单号",
+    // "order_no": "订单号",
     "order_cancel": "取消订单",
     "order_now_pay": "立即支付",
     "confirm_receipt": "确认收货",
@@ -120,11 +120,26 @@ export default {
     "favorite_datetime": "收藏时间",
     "favorite_info": "查看详细",
     "no_favorite": "还没有任何收藏呢",
-    "order_now_pay": "立即支付",
-    "order_now_pay": "立即支付",
-    "order_now_pay": "立即支付",
-    "order_now_pay": "立即支付",
-    "order_now_pay": "立即支付",
+
+    "logging_in":"登录中...",
+    "retrying":"正在重试...",
+    "go_to_login": "去登录",
+    "tips":"提示",
+    "add_to_cart_fail":"加入购物车失败",
+    "buy_amount_min":"购买数量不能少于",
+    "item":"件",
+    "add_to_collection_success":"收藏成功",
+    "remove_for_collection_success":"取消收藏",
+    "save_success":"保存成功",
+    "generating":"生成中...",
+    "load_user_information":"加载资料..."
+
+
+
+    // "order_now_pay": "立即支付",
+    // "order_now_pay": "立即支付",
+    // "order_now_pay": "立即支付",
+    // "order_now_pay": "立即支付",
 
 
     
@@ -199,7 +214,7 @@ export default {
     "no_address": "No Address",
 
 
-    "add_new_address": "Add New Address",
+    // "add_new_address": "Add New Address",
     "address_name": "Name",
     "address_person_name": "Name",
     "mobile": "Mobile",
@@ -229,7 +244,7 @@ export default {
     "order_list": "Order List",
     "no_order": "No orders yet",
     "order_create_datetime": "Order Time",
-    "order_no": "Order No",
+    // "order_no": "Order No",
     "order_cancel": "Order Cancel",
     "order_now_pay": "Order Pay",
     "confirm_receipt": "Confirm Receipt",
@@ -254,35 +269,20 @@ export default {
     "favorite_datetime": "Fav Date",
     "favorite_info": "Fav Info",
     "no_favorite": "Still have no collections yet?",
-
-    "search": "Search",
-    "search": "Search",
-    "search": "Search",
-    "search": "Search",
-    "search": "Search",
-    "search": "Search",
-    "search": "Search",
-    "search": "Search",
-    "search": "Search",
-    "search": "Search",
-    "search": "Search",
-    "search": "Search",
-    "search": "Search",
-    "search": "Search",
-    "search": "Search",
-    "search": "Search",
-    "search": "Search",
-    "search": "Search",
-    "search": "Search",
-
-    "search": "Search",
-    "search": "Search",
-    "search": "Search",
-    "search": "Search",
-    "search": "Search",
-    "search": "Search",
-    "search": "Search",
-    "search": "Search",
+    
+    "logging_in": "Logging in...",
+    "retrying": "Retrying...",
+    "go_to_login": "Go to land",
+    "tips":"Tips",
+    "add_to_cart_fail":"Add to Cart fail",
+    "buy_amount_min":"Purchase quantity cannot be less than",
+    "item":"item",
+    "add_to_collection_success":"Collection success",
+    "remove_for_collection_success":"Cancel collection",
+    "save_success":"Save successfully",
+    "generating":"Generating...",
+    "load_user_information":"Loading information..."
+    // "search": "Search",
     
   }
 }

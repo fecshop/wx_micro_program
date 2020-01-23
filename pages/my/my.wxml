@@ -16,11 +16,11 @@
       </navigator>
     </swiper>
   </view>
-  <view class="userinfo-item">
+  <view class="userinfo-item" wx:if="{{logged}}">
     <image src="../../images/profile_dfunding.png"></image>
     <navigator url="/pages/order-list/order-list" hover-class="none">{{language.my_order}}</navigator>
   </view>
-  <view class="user-cart-list">
+  <view class="user-cart-list" wx:if="{{logged}}">
     <navigator hover-class="none" class="cart-list" url="/pages/order-list/order-list?currentType=1">
       <view wx:if="{{noplay}}" class="red-dot">{{noplay}}</view>
       <image src="../../images/order-details/orderform_pay.png"></image>
@@ -42,7 +42,7 @@
       {{language.order_complete}}
     </navigator>
   </view>
-  <view class="userinfo-item-box">
+  <view class="userinfo-item-box" wx:if="{{logged}}">
     <!--
     <navigator  hover-class="none" class="userinfo-item" url="/pages/withdraw/withdraw">
       <image src="../../images/profile_tegral.png"></image>
@@ -73,7 +73,8 @@
       <button open-type="contact" session-from="weapp"></button>
     </view>
   </view>
-  <view class="userinfo-info">
+  <view class="userinfo-info" wx:if="{{logged}}">
     {{getInfo}}
   </view>
+  <view class="login" wx:if="{{!logged}}"><button type="warn" bindtap="onReady"> {{language.go_to_login}} </button></view>
 </view>

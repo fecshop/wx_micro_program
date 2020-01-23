@@ -75,8 +75,14 @@ Page({
   },
   wxLogin: function(){
     var that = this;
+
+    let msg = that.data.language.logging_in;
+    if (that.data.reRequestCount>0){
+      msg = that.data.language.retrying + that.data.reRequestCount;
+    }
+
     wx.showLoading({
-      title: 'loading...',
+      title: msg,
     })
     wx.login({
       success: function (res) {
@@ -114,11 +120,11 @@ Page({
                 reRequestCount: reRequestCount + 1,
               });
               if (reRequestCount < 6) {
-                wx.showModal({
-                  title: "提示",
-                  content: "微信登录失败，重试中",
-                  showCancel: false
-                });
+                // wx.showModal({
+                //   title: "提示",
+                //   content: "微信登录失败，重试中",
+                //   showCancel: false
+                // });
                 that.wxLogin();
               } else {
                 wx.showModal({
@@ -140,6 +146,9 @@ Page({
 
   tabFun: function (e) {
     var _datasetId = e.target.dataset.id;
+    if(!_datasetId){
+      return
+    }
     var _obj = {};
     _obj.curHdIndex = _datasetId;
     _obj.curBdIndex = _datasetId;
